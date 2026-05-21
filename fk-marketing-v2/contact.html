@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — FK Marketing</title>
+<meta name="description" content="Get in touch with FK Marketing. Tell us about your brand and goals and we'll put together a custom plan within 24 hours.">
+<link rel="canonical" href="https://fkmarketing.com/contact.html">
+<link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-3NNBFJYJE5"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-3NNBFJYJE5");</script>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<nav id="navbar">
+  <a href="index.html" class="logo">FK<span>.</span></a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="about.html">About</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="process.html">Process</a></li>
+    <li><a href="portfolio.html">Work</a></li>
+    <li><a href="contact.html" class="nav-cta active">Get Started</a></li>
+  </ul>
+</nav>
+
+<section class="page-hero">
+  <div class="label fade-up">Get In Touch</div>
+  <h1 class="fade-up">Let's grow your <em>brand.</em></h1>
+  <p class="page-hero-desc fade-up">Tell us about your goals. We'll get back to you within 24 hours with a custom plan.</p>
+</section>
+
+<section class="contact-section">
+  <div class="contact-grid">
+    <div class="contact-info fade-up">
+      <h2>Why work with FK Marketing?</h2>
+      <div class="ci-items">
+        <div class="ci-item">
+          <div class="ci-icon">⚡</div>
+          <div>
+            <h4>Fast Response</h4>
+            <p>We reply within 24 hours — usually much faster.</p>
+          </div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-icon">🎯</div>
+          <div>
+            <h4>Custom Strategy</h4>
+            <p>No templates. Every plan is built specifically for your brand.</p>
+          </div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-icon">📊</div>
+          <div>
+            <h4>Daily Reports</h4>
+            <p>You'll always know exactly how your campaigns are performing.</p>
+          </div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-icon">🤝</div>
+          <div>
+            <h4>True Partnership</h4>
+            <p>We act as an extension of your team, not just a vendor.</p>
+          </div>
+        </div>
+      </div>
+      <div class="contact-direct">
+        <h4>Prefer to reach out directly?</h4>
+        <a href="mailto:favourmukunzi18@gmail.com">favourmukunzi18@gmail.com</a>
+      </div>
+    </div>
+
+    <div class="contact-form-wrap fade-up">
+      <!-- Formspree success/error messages -->
+      <div data-fs-success class="form-success" style="display:none">
+        <div class="success-icon">✅</div>
+        <h3>Message sent!</h3>
+        <p>Thanks for reaching out. We'll be in touch within 24 hours.</p>
+      </div>
+      <div data-fs-error class="form-error-global" style="display:none"></div>
+
+      <form id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name *</label>
+            <input type="text" id="firstName" name="firstName" placeholder="John" data-fs-field required>
+            <span class="field-error" data-fs-error="firstName"></span>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name *</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Doe" data-fs-field required>
+            <span class="field-error" data-fs-error="lastName"></span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" name="email" placeholder="john@company.com" data-fs-field required>
+          <span class="field-error" data-fs-error="email"></span>
+        </div>
+        <div class="form-group">
+          <label for="company">Company / Brand</label>
+          <input type="text" id="company" name="company" placeholder="Your Company Name" data-fs-field>
+        </div>
+        <div class="form-group">
+          <label for="website">Website (if you have one)</label>
+          <input type="url" id="website" name="website" placeholder="https://yourwebsite.com" data-fs-field>
+        </div>
+        <div class="form-group">
+          <label for="budget">Monthly Budget</label>
+          <select id="budget" name="budget" data-fs-field>
+            <option value="">Select a range...</option>
+            <option value="under-1k">Under $1,000</option>
+            <option value="1k-3k">$1,000 – $3,000</option>
+            <option value="3k-5k">$3,000 – $5,000</option>
+            <option value="5k-10k">$5,000 – $10,000</option>
+            <option value="10k+">$10,000+</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="services">Services Interested In</label>
+          <select id="services" name="services" data-fs-field>
+            <option value="">Select a service...</option>
+            <option>Strategy & Consulting</option>
+            <option>SEO & Content Marketing</option>
+            <option>Social Media Management</option>
+            <option>Paid Advertising</option>
+            <option>Email Marketing</option>
+            <option>Branding & Design</option>
+            <option>Web Design</option>
+            <option>Full-Service Package</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Tell Us About Your Goals *</label>
+          <textarea id="message" name="message" placeholder="What are you looking to achieve? What's your biggest marketing challenge right now?" data-fs-field required></textarea>
+          <span class="field-error" data-fs-error="message"></span>
+        </div>
+        <button type="submit" class="form-submit" data-fs-submit-btn>Send Message →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand"><div class="footer-logo">FK<span>.</span> Marketing</div><p>Your end-to-end growth partner.</p></div>
+    <div class="footer-nav">
+      <div class="footer-col"><h4>Company</h4><ul><li><a href="about.html">About</a></li><li><a href="process.html">Process</a></li><li><a href="portfolio.html">Work</a></li></ul></div>
+      <div class="footer-col"><h4>Services</h4><ul><li><a href="services.html">SEO & Content</a></li><li><a href="services.html">Paid Ads</a></li><li><a href="services.html">Social Media</a></li></ul></div>
+      <div class="footer-col"><h4>Contact</h4><ul><li><a href="contact.html">Get Started</a></li><li><a href="mailto:favourmukunzi18@gmail.com">favourmukunzi18@gmail.com</a></li></ul></div>
+    </div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 FK Marketing. All rights reserved.</span><span>Built with ❤️ and data.</span></div>
+</footer>
+<script src="js/main.js"></script>
+<!-- Formspree Ajax SDK -->
+<script>
+  window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+  formspree('initForm', { formElement: '#contactForm', formId: 'meedavge' });
+</script>
+<script src="https://unpkg.com/@formspree/ajax@1" defer></script>
+</body>
+</html>
