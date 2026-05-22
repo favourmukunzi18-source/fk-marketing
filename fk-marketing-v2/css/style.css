@@ -264,3 +264,27 @@ footer { background:var(--gray);border-top:1px solid var(--border); }
 .field-error { display:block;font-size:12px;color:#ff6b6b;margin-top:6px;min-height:16px; }
 .form-error-global { background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.3);border-radius:10px;padding:12px 16px;font-size:13px;color:#ff6b6b;margin-bottom:16px; }
 .form-submit[disabled] { opacity:0.6;cursor:not-allowed;transform:none; }
+
+/* ─── PRICING ─── */
+.pricing-section { padding:80px 60px; }
+.pricing-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:start; }
+.pricing-card { background:var(--gray);border:1px solid var(--border);border-radius:24px;padding:40px;position:relative;transition:transform 0.2s; }
+.pricing-card:hover { transform:translateY(-4px); }
+.pricing-card--featured { background:var(--gray2);border-color:rgba(200,245,66,0.3);box-shadow:0 0 60px rgba(200,245,66,0.06); }
+.pricing-badge { display:inline-block;background:var(--accent);color:var(--black);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:20px; }
+.pricing-tier { font-family:'Syne',sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.1em;color:var(--mid);margin-bottom:16px; }
+.pricing-price { font-family:'Syne',sans-serif;font-weight:800;font-size:52px;letter-spacing:-0.03em;line-height:1;color:var(--white);margin-bottom:20px; }
+.pricing-price span { font-size:18px;font-weight:400;color:var(--mid); }
+.pricing-desc { color:var(--mid);font-size:14px;line-height:1.7;margin-bottom:32px;padding-bottom:32px;border-bottom:1px solid var(--border); }
+.pricing-features { list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:36px; }
+.pricing-features li { font-size:14px;color:var(--white);opacity:0.85; }
+.pricing-faq { padding:80px 60px;background:var(--gray);border-top:1px solid var(--border); }
+.pricing-faq h2 { font-size:clamp(32px,4vw,52px);margin-bottom:48px; }
+.faq-grid { display:grid;grid-template-columns:1fr 1fr;gap:40px; }
+.faq-item h3 { font-size:18px;font-weight:700;margin-bottom:12px;letter-spacing:-0.01em; }
+.faq-item p { color:var(--mid);font-size:15px;line-height:1.8;font-weight:300; }
+@media (max-width:768px) {
+  .pricing-section, .pricing-faq { padding:60px 24px; }
+  .pricing-grid { grid-template-columns:1fr; }
+  .faq-grid { grid-template-columns:1fr; }
+}
