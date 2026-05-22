@@ -156,11 +156,46 @@
   <div class="footer-bottom"><span>© 2026 FK Marketing. All rights reserved.</span><span>Built with ❤️ and data.</span></div>
 </footer>
 <script src="js/main.js"></script>
-<!-- Formspree Ajax SDK -->
 <script>
-  window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
-  formspree('initForm', { formElement: '#contactForm', formId: 'meedavge' });
+  (function () {
+    var form = document.getElementById('contactForm');
+    var successDiv = document.querySelector('[data-fs-success]');
+    var errorDiv = document.querySelector('[data-fs-error]');
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      var submitBtn = form.querySelector('[data-fs-submit-btn]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      errorDiv.style.display = 'none';
+
+      try {
+        var response = await fetch('https://formspree.io/f/meedavge', {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (response.ok) {
+          form.style.display = 'none';
+          successDiv.style.display = 'block';
+        } else {
+          var data = await response.json();
+          var msg = (data.errors && data.errors.map(function (err) { return err.message; }).join(', ')) || 'Something went wrong. Please try again.';
+          errorDiv.textContent = msg;
+          errorDiv.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message →';
+        }
+      } catch (err) {
+        errorDiv.textContent = 'Network error. Please check your connection and try again.';
+        errorDiv.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message →';
+      }
+    });
+  })();
 </script>
-<script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 </body>
 </html>
