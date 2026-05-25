@@ -160,42 +160,54 @@
 <script src="js/main.js"></script>
 <script>
   (function () {
-    var form = document.getElementById('contactForm');
-    var successDiv = document.querySelector('[data-fs-success]');
-    var errorDiv = document.querySelector('[data-fs-error]');
+    var form        = document.getElementById('contactForm');
+    var successDiv  = document.querySelector('.form-success');
+    var errorDiv    = document.querySelector('.form-error-global');
+    var calendlyBtn = document.querySelector('.contact-form-wrap .btn-primary');
+    var submitBtn   = form.querySelector('[data-fs-submit-btn]');
 
-    form.addEventListener('submit', async function (e) {
+    var ERROR_STYLE = 'display:block;color:#dc2626;background:#fef2f2;border:1px solid #fecaca;padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:14px;';
+
+    form.addEventListener('submit', function (e) {
       e.preventDefault();
 
-      var submitBtn = form.querySelector('[data-fs-submit-btn]');
-      submitBtn.disabled = true;
+      submitBtn.disabled    = true;
       submitBtn.textContent = 'Sending…';
       errorDiv.style.display = 'none';
+      errorDiv.textContent   = '';
 
-      try {
-        var response = await fetch('https://formspree.io/f/meedavge', {
-          method: 'POST',
-          body: new FormData(form),
-          headers: { 'Accept': 'application/json' }
+      fetch('https://formspree.io/f/meedavge', {
+        method:  'POST',
+        body:    new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      })
+      .then(function (response) {
+        return response.json().then(function (data) {
+          return { ok: response.ok, data: data };
         });
-
-        if (response.ok) {
+      })
+      .then(function (result) {
+        if (result.ok) {
           form.style.display = 'none';
+          if (calendlyBtn) calendlyBtn.style.display = 'none';
           successDiv.style.display = 'block';
+          successDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } else {
-          var data = await response.json();
-          var msg = (data.errors && data.errors.map(function (err) { return err.message; }).join(', ')) || 'Something went wrong. Please try again.';
+          var errors = result.data && result.data.errors;
+          var msg = errors ? errors.map(function (err) { return err.message; }).join(', ')
+                           : 'Something went wrong. Please try again.';
           errorDiv.textContent = msg;
-          errorDiv.style.display = 'block';
-          submitBtn.disabled = false;
+          errorDiv.style.cssText = ERROR_STYLE;
+          submitBtn.disabled    = false;
           submitBtn.textContent = 'Send Message →';
         }
-      } catch (err) {
-        errorDiv.textContent = 'Network error. Please check your connection and try again.';
-        errorDiv.style.display = 'block';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Message →';
-      }
+      })
+      .catch(function () {
+        errorDiv.textContent   = 'Network error. Please check your connection and try again.';
+        errorDiv.style.cssText = ERROR_STYLE;
+        submitBtn.disabled     = false;
+        submitBtn.textContent  = 'Send Message →';
+      });
     });
   })();
 </script>
