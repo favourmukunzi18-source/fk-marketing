@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://fkmarketing.com/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://fkmarketing.com/about.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://fkmarketing.com/services.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://fkmarketing.com/process.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://fkmarketing.com/portfolio.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://fkmarketing.com/contact.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://fkmarketing.org/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://fkmarketing.org/about.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fkmarketing.org/services.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://fkmarketing.org/process.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fkmarketing.org/portfolio.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fkmarketing.org/contact.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
 </urlset>
