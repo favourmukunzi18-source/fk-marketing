@@ -1,0 +1,165 @@
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0a0a0f;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  color: white;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-container {
+  width: 100%;
+  max-width: 430px;
+  height: 100dvh;
+  position: relative;
+  overflow: hidden;
+  background: #0a0a0f;
+}
+
+@keyframes glitch {
+  0%, 100% { transform: translate(0); clip-path: none; }
+  20% { transform: translate(-3px, 1px); clip-path: inset(20% 0 30% 0); }
+  40% { transform: translate(3px, -1px); clip-path: inset(60% 0 10% 0); }
+  60% { transform: translate(-2px, 2px); clip-path: inset(40% 0 50% 0); }
+  80% { transform: translate(2px, -2px); clip-path: none; }
+}
+
+@keyframes neon-pulse {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 8px currentColor) drop-shadow(0 0 16px currentColor); }
+  50% { opacity: 0.85; filter: drop-shadow(0 0 16px currentColor) drop-shadow(0 0 32px currentColor) drop-shadow(0 0 48px currentColor); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-8px) rotate(1deg); }
+  66% { transform: translateY(-4px) rotate(-1deg); }
+}
+
+@keyframes bounce-in {
+  0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+  60% { transform: scale(1.15) rotate(3deg); opacity: 1; }
+  80% { transform: scale(0.95) rotate(-1deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(-20px) rotate(0deg) scale(1); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg) scale(0.5); opacity: 0; }
+}
+
+@keyframes rain-fall {
+  0% { transform: translateY(-20px) scaleY(1); opacity: 0.6; }
+  100% { transform: translateY(110vh) scaleY(1.2); opacity: 0; }
+}
+
+@keyframes heart-pop {
+  0% { transform: scale(0) translateY(0); opacity: 1; }
+  50% { transform: scale(1.4) translateY(-20px); opacity: 1; }
+  100% { transform: scale(0.8) translateY(-60px); opacity: 0; }
+}
+
+@keyframes spotlight-sweep {
+  0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.4; }
+  50% { transform: scale(1.2) translate(5px, -5px); opacity: 0.7; }
+}
+
+@keyframes slide-up {
+  0% { transform: translateY(40px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  20% { transform: translateX(-6px) rotate(-1deg); }
+  40% { transform: translateX(6px) rotate(1deg); }
+  60% { transform: translateX(-4px) rotate(-0.5deg); }
+  80% { transform: translateX(4px) rotate(0.5deg); }
+}
+
+@keyframes walk-in {
+  0% { transform: translateX(120%) scale(0.8); opacity: 0; }
+  100% { transform: translateX(0) scale(1); opacity: 1; }
+}
+
+@keyframes poster-rise {
+  0% { transform: translateY(100px) scale(0.7) rotate(5deg); opacity: 0; }
+  70% { transform: translateY(-10px) scale(1.05) rotate(-1deg); opacity: 1; }
+  100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes text-glow {
+  0%, 100% { text-shadow: 0 0 10px #ff2d78, 0 0 20px #ff2d78, 0 0 40px #ff2d78; }
+  50% { text-shadow: 0 0 20px #ff2d78, 0 0 40px #ff2d78, 0 0 80px #ff2d78, 0 0 120px #ff2d78; }
+}
+
+@keyframes progress-fill {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+@keyframes fade-in-up {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink-cursor {
+  0%, 100% { border-right-color: #00ff88; }
+  50% { border-right-color: transparent; }
+}
+
+@keyframes scale-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+.glitch-text {
+  animation: glitch 0.15s infinite;
+}
+
+.neon-glow {
+  animation: neon-pulse 2s ease-in-out infinite;
+}
+
+.float-anim {
+  animation: float 3s ease-in-out infinite;
+}
+
+.text-glow-pink {
+  animation: text-glow 2s ease-in-out infinite;
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+::-webkit-scrollbar { display: none; }
+
+.no-scrollbar {
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar { display: none; }
