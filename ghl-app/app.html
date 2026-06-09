@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeadFlow CRM</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .sidebar { background: #0f172a; }
+    .sidebar-item { color: #94a3b8; transition: all 0.15s; }
+    .sidebar-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .sidebar-item.active { background: rgba(59,130,246,0.2); color: #60a5fa; border-left: 3px solid #3b82f6; }
+    .sidebar-section { color: #475569; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 12px 16px 4px; }
+    #main-content { height: calc(100vh - 56px); overflow: hidden; }
+    .section-view { display: none; height: 100%; overflow: auto; }
+    .section-view.active { display: block; }
+    .notification-badge { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: #ef4444; border-radius: 50%; }
+    .user-menu { display: none; }
+    .user-menu.open { display: block; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="bg-gray-100">
+
+<div class="flex h-screen overflow-hidden">
+
+  <!-- Sidebar -->
+  <div class="sidebar w-60 flex-shrink-0 flex flex-col overflow-y-auto">
+    <div class="flex items-center gap-3 px-5 py-4 border-b border-slate-700">
+      <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">LF</div>
+      <div>
+        <p class="text-white font-bold text-sm">LeadFlow CRM</p>
+        <p class="text-slate-400 text-xs">Agency Plan</p>
+      </div>
+    </div>
+    <div class="px-3 py-2 border-b border-slate-700">
+      <button class="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-700 text-slate-300 text-sm">
+        <i class="fas fa-building text-slate-400 text-xs"></i>
+        <span class="flex-1 text-left truncate">Main Location</span>
+        <i class="fas fa-chevron-down text-slate-500 text-xs"></i>
+      </button>
+    </div>
+    <nav class="flex-1 py-2">
+      <div class="sidebar-section">Main</div>
+      <button data-section="dashboard" class="sidebar-item active w-full flex items-center gap-3 px-4 py-2.5 text-sm" onclick="GHL.navigate('dashboard')"><i class="fas fa-chart-pie w-4 text-center"></i><span class="flex-1 text-left">Dashboard</span></button>
+      <button data-section="contacts" class="sidebar-item w-full flex items-center gap-3 px-4 py-2.5 text-sm" onclick="GHL.navigate('contacts')"><i class="fas fa-users w-4 text-center"></i><span class="flex-1 text-left">Contacts</span></button>
+      <button data-section="pipeline" class="sidebar-item w-full flex items-center gap-3 px-4 py-2.5 text-sm" onclick="GHL.navigate('pipeline')"><i class="fas fa-columns w-4 text-center"></i><span class="flex-1 text-left">Opportunities</span></button>
+      <button data-section="conversations" class="sidebar-item w-full flex items-center gap-3 px-4 py-2.5 text-sm" onclick="GHL.navigate('conversations')"><i class="fas fa-comments w-4 text-center"></i><span class="flex-1 text-left">Conversations</span><span class="bg-blue-500 text-white text-xs rounded-full px-1.5 py-0.5 font-medium">5</span></button>
+      <button data-section="calendar" class="sidebar-item w-full flex items-center gap-3 px-4 py-2.5 text-sm" onclick="GHL.navigate('calendar')"><i class="fas fa-calendar-alt w-4 text-center"></i><span class="flex-1 text-left">Calendar</span></button>
+      <div class="sidebar-section mt-2">Marketing</div>
+      <button data-section="campaigns" class="sidebar-item w-full flex items-center gap-3 px-4 py-2.5 text-sm" onclick="GHL.navigate('campaigns')"><i class="fas fa-paper-plane w-4 text-center"></i><span class="flex-1 text-left">Campaigns</span></button>
+      <button data-section="workflows" class="sidebar-item w-full flex items-center gap-3 px-4 py-2.5 text-sm" onclick="GHL.navigate('workflows')"><i class="fas fa-project-diagram w-4 text-center"></i><span class="flex-1 text-left">Workflows</span></button>
+      <button data-section="funnels" class="sidebar-item w-full flex items-center gap-3 px-4 py-2.5 text-sm" onclick="GHL.navigate('funnels')"><i class="fas fa-filter w-4 text-center"></i><span class="flex-1 text-left">Sites &amp; Funnels</span></button>
+      <div class="sidebar-section mt-2">Analytics</div>
+      <button data-section="reporting" class="sidebar-item w-full flex items-center gap-3 px-4 py-2.5 text-sm" onclick="GHL.navigate('reporting')"><i class="fas fa-chart-bar w-4 text-center"></i><span class="flex-1 text-left">Reporting</span></button>
+      <div class="sidebar-section mt-2">Account</div>
+      <button data-section="settings" class="sidebar-item w-full flex items-center gap-3 px-4 py-2.5 text-sm" onclick="GHL.navigate('settings')"><i class="fas fa-cog w-4 text-center"></i><span class="flex-1 text-left">Settings</span></button>
+    </nav>
+    <div class="border-t border-slate-700 p-3">
+      <div class="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-slate-700 cursor-pointer">
+        <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">AM</div>
+        <div class="flex-1 min-w-0">
+          <p class="text-white text-sm font-medium truncate">Alice Martinez</p>
+          <p class="text-slate-400 text-xs">Admin</p>
+        </div>
+        <button onclick="window.location.href='index.html'" class="text-slate-400 hover:text-white text-xs" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Area -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Top Header -->
+    <header class="bg-white border-b border-gray-200 h-14 flex items-center px-5 gap-4 flex-shrink-0 z-20">
+      <div class="relative flex-1 max-w-md">
+        <i class="fas fa-search absolute left-3 top-2.5 text-gray-400 text-sm"></i>
+        <input id="global-search" type="text" placeholder="Search contacts, opportunities..." class="w-full pl-9 pr-4 py-2 bg-gray-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors">
+      </div>
+      <div class="flex items-center gap-2 ml-auto">
+        <div class="relative">
+          <button id="quick-add-btn" class="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
+            <i class="fas fa-plus text-xs"></i> New
+          </button>
+          <div id="quick-add-menu" class="hidden absolute right-0 mt-1 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-1 z-50">
+            <button onclick="GHL.navigate('contacts');document.getElementById('quick-add-menu').classList.add('hidden')" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"><i class="fas fa-user-plus text-gray-400 w-4 text-center"></i>Contact</button>
+            <button onclick="GHL.navigate('pipeline');document.getElementById('quick-add-menu').classList.add('hidden')" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"><i class="fas fa-star text-gray-400 w-4 text-center"></i>Opportunity</button>
+            <button onclick="GHL.navigate('calendar');document.getElementById('quick-add-menu').classList.add('hidden')" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"><i class="fas fa-calendar-plus text-gray-400 w-4 text-center"></i>Appointment</button>
+            <button onclick="GHL.navigate('campaigns');document.getElementById('quick-add-menu').classList.add('hidden')" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"><i class="fas fa-paper-plane text-gray-400 w-4 text-center"></i>Campaign</button>
+          </div>
+        </div>
+        <div class="relative">
+          <button id="notif-btn" class="relative w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-500">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge"></span>
+          </button>
+          <div id="notif-panel" class="hidden absolute right-0 mt-1 w-80 bg-white rounded-xl shadow-lg border border-gray-200 z-50">
+            <div class="p-4 border-b border-gray-100 flex items-center justify-between">
+              <h3 class="font-semibold text-gray-900">Notifications</h3>
+              <button class="text-xs text-blue-600 hover:underline">Mark all read</button>
+            </div>
+            <div class="max-h-72 overflow-y-auto">
+              <div class="px-4 py-3 hover:bg-gray-50 border-b border-gray-50 cursor-pointer flex gap-3"><div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0"><i class="fas fa-user-plus text-blue-600 text-xs"></i></div><div><p class="text-sm text-gray-700">New lead: James Wilson from Facebook Ad</p><p class="text-xs text-gray-400 mt-0.5">2m ago</p></div></div>
+              <div class="px-4 py-3 hover:bg-gray-50 border-b border-gray-50 cursor-pointer flex gap-3"><div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0"><i class="fas fa-calendar text-purple-600 text-xs"></i></div><div><p class="text-sm text-gray-700">Appointment in 30 minutes with Emma Rodriguez</p><p class="text-xs text-gray-400 mt-0.5">28m ago</p></div></div>
+              <div class="px-4 py-3 hover:bg-gray-50 border-b border-gray-50 cursor-pointer flex gap-3"><div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0"><i class="fas fa-sms text-green-600 text-xs"></i></div><div><p class="text-sm text-gray-700">New SMS from Michael Chen</p><p class="text-xs text-gray-400 mt-0.5">1h ago</p></div></div>
+              <div class="px-4 py-3 hover:bg-gray-50 border-b border-gray-50 cursor-pointer flex gap-3"><div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0"><i class="fas fa-trophy text-yellow-600 text-xs"></i></div><div><p class="text-sm text-gray-700">Deal closed: Acme Corp - $8,500</p><p class="text-xs text-gray-400 mt-0.5">2h ago</p></div></div>
+            </div>
+          </div>
+        </div>
+        <button class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-500"><i class="fas fa-question-circle"></i></button>
+        <div class="relative">
+          <button id="user-menu-btn" class="flex items-center gap-2 hover:bg-gray-100 rounded-lg px-2 py-1">
+            <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold">AM</div>
+            <span class="text-sm font-medium text-gray-700">Alice M.</span>
+            <i class="fas fa-chevron-down text-gray-400 text-xs"></i>
+          </button>
+          <div id="user-dropdown" class="user-menu absolute right-0 mt-1 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-1 z-50">
+            <div class="px-4 py-3 border-b border-gray-100"><p class="font-medium text-gray-800 text-sm">Alice Martinez</p><p class="text-xs text-gray-400">alice@leadflow.com</p></div>
+            <button onclick="GHL.navigate('settings')" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"><i class="fas fa-cog w-4 text-center text-gray-400"></i>Settings</button>
+            <button class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"><i class="fas fa-user w-4 text-center text-gray-400"></i>Profile</button>
+            <div class="border-t border-gray-100 mt-1 pt-1"><button onclick="window.location.href='index.html'" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50"><i class="fas fa-sign-out-alt w-4 text-center"></i>Sign Out</button></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Views -->
+    <div id="main-content">
+      <div id="view-dashboard" class="section-view active"><div id="content-dashboard" class="h-full overflow-auto"></div></div>
+      <div id="view-contacts" class="section-view"><div id="content-contacts" class="h-full overflow-auto"></div></div>
+      <div id="view-pipeline" class="section-view"><div id="content-pipeline" class="h-full overflow-hidden"></div></div>
+      <div id="view-conversations" class="section-view"><div id="content-conversations" class="h-full overflow-hidden"></div></div>
+      <div id="view-calendar" class="section-view"><div id="content-calendar" class="h-full overflow-auto"></div></div>
+      <div id="view-campaigns" class="section-view"><div id="content-campaigns" class="h-full overflow-auto"></div></div>
+      <div id="view-workflows" class="section-view"><div id="content-workflows" class="h-full overflow-auto"></div></div>
+      <div id="view-funnels" class="section-view"><div id="content-funnels" class="h-full overflow-auto"></div></div>
+      <div id="view-reporting" class="section-view"><div id="content-reporting" class="h-full overflow-hidden"></div></div>
+      <div id="view-settings" class="section-view"><div id="content-settings" class="h-full overflow-auto"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Module Scripts -->
+<script src="modules/dashboard.js"></script>
+<script src="modules/contacts.js"></script>
+<script src="modules/pipeline.js"></script>
+<script src="modules/conversations.js"></script>
+<script src="modules/calendar.js"></script>
+<script src="modules/campaigns.js"></script>
+<script src="modules/workflows.js"></script>
+<script src="modules/funnels.js"></script>
+<script src="modules/reporting.js"></script>
+<script src="modules/settings.js"></script>
+
+<script>
+const GHL = {
+  initialized: {},
+
+  navigate(section) {
+    document.querySelectorAll('.section-view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('view-' + section)?.classList.add('active');
+    document.querySelector('[data-section="' + section + '"]')?.classList.add('active');
+
+    if (!this.initialized[section]) {
+      this.initialized[section] = true;
+      const container = document.getElementById('content-' + section);
+      if (!container) return;
+      const modules = {
+        dashboard: typeof DashboardModule !== 'undefined' ? DashboardModule : null,
+        contacts: typeof ContactsModule !== 'undefined' ? ContactsModule : null,
+        pipeline: typeof PipelineModule !== 'undefined' ? PipelineModule : null,
+        conversations: typeof ConversationsModule !== 'undefined' ? ConversationsModule : null,
+        calendar: typeof CalendarModule !== 'undefined' ? CalendarModule : null,
+        campaigns: typeof CampaignsModule !== 'undefined' ? CampaignsModule : null,
+        workflows: typeof WorkflowsModule !== 'undefined' ? WorkflowsModule : null,
+        funnels: typeof FunnelsModule !== 'undefined' ? FunnelsModule : null,
+        reporting: typeof ReportingModule !== 'undefined' ? ReportingModule : null,
+        settings: typeof SettingsModule !== 'undefined' ? SettingsModule : null,
+      };
+      const mod = modules[section];
+      if (mod && typeof mod.init === 'function') {
+        try { mod.init(container); }
+        catch(e) {
+          console.error('Error initializing ' + section + ':', e);
+          container.innerHTML = '<div class="p-10 text-center text-gray-400"><i class="fas fa-exclamation-circle text-4xl mb-3 block"></i><p class="font-medium">' + section + ' failed to load</p><p class="text-xs mt-1 text-red-400">' + e.message + '</p></div>';
+        }
+      }
+    }
+
+    document.getElementById('quick-add-menu')?.classList.add('hidden');
+    document.getElementById('notif-panel')?.classList.add('hidden');
+    document.getElementById('user-dropdown')?.classList.remove('open');
+  },
+
+  init() {
+    window.GHL = this;
+    this.navigate('dashboard');
+
+    document.getElementById('quick-add-btn')?.addEventListener('click', e => {
+      e.stopPropagation();
+      document.getElementById('quick-add-menu')?.classList.toggle('hidden');
+      document.getElementById('notif-panel')?.classList.add('hidden');
+      document.getElementById('user-dropdown')?.classList.remove('open');
+    });
+
+    document.getElementById('notif-btn')?.addEventListener('click', e => {
+      e.stopPropagation();
+      document.getElementById('notif-panel')?.classList.toggle('hidden');
+      document.getElementById('quick-add-menu')?.classList.add('hidden');
+      document.getElementById('user-dropdown')?.classList.remove('open');
+    });
+
+    document.getElementById('user-menu-btn')?.addEventListener('click', e => {
+      e.stopPropagation();
+      document.getElementById('user-dropdown')?.classList.toggle('open');
+      document.getElementById('notif-panel')?.classList.add('hidden');
+      document.getElementById('quick-add-menu')?.classList.add('hidden');
+    });
+
+    document.addEventListener('click', () => {
+      document.getElementById('quick-add-menu')?.classList.add('hidden');
+      document.getElementById('notif-panel')?.classList.add('hidden');
+      document.getElementById('user-dropdown')?.classList.remove('open');
+    });
+
+    document.getElementById('global-search')?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const q = e.target.value.trim();
+        if (q) {
+          this.navigate('contacts');
+          setTimeout(() => {
+            const cs = document.getElementById('contact-search');
+            if (cs) { cs.value = q; cs.dispatchEvent(new Event('input')); }
+          }, 400);
+        }
+      }
+    });
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => GHL.init());
+</script>
+</body>
+</html>
