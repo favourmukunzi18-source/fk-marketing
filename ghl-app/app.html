@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeadFlow CRM</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="data.js"></script>
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon"><i class="fa-solid fa-bolt"></i></div>
+    <div class="logo-text">Lead<span>Flow</span></div>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <div class="nav-item active" onclick="showSection('dashboard',this)">
+      <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
+      <span class="nav-label">Dashboard</span>
+    </div>
+    <div class="nav-item" onclick="showSection('contacts',this)">
+      <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+      <span class="nav-label">Contacts</span>
+    </div>
+    <div class="nav-item" onclick="showSection('opportunities',this)">
+      <span class="nav-icon"><i class="fa-solid fa-chart-kanban"></i></span>
+      <span class="nav-label">Opportunities</span>
+    </div>
+    <div class="nav-item" onclick="showSection('conversations',this)">
+      <span class="nav-icon"><i class="fa-solid fa-message"></i></span>
+      <span class="nav-label">Conversations</span>
+      <span class="nav-badge" id="conv-badge">12</span>
+    </div>
+
+    <div class="nav-section-label">Marketing</div>
+    <div class="nav-item" onclick="showSection('campaigns',this)">
+      <span class="nav-icon"><i class="fa-solid fa-paper-plane"></i></span>
+      <span class="nav-label">Campaigns</span>
+    </div>
+    <div class="nav-item" onclick="showSection('workflows',this)">
+      <span class="nav-icon"><i class="fa-solid fa-diagram-project"></i></span>
+      <span class="nav-label">Workflows</span>
+    </div>
+    <div class="nav-item" onclick="showSection('funnels',this)">
+      <span class="nav-icon"><i class="fa-solid fa-filter"></i></span>
+      <span class="nav-label">Sites &amp; Funnels</span>
+    </div>
+
+    <div class="nav-section-label">Tools</div>
+    <div class="nav-item" onclick="showSection('calendar',this)">
+      <span class="nav-icon"><i class="fa-solid fa-calendar-days"></i></span>
+      <span class="nav-label">Calendar</span>
+    </div>
+    <div class="nav-item" onclick="showSection('reporting',this)">
+      <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
+      <span class="nav-label">Reporting</span>
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-user" onclick="toggleUserMenu()">
+      <div class="user-avatar" id="sb-avatar">AJ</div>
+      <div class="user-info">
+        <div class="user-name" id="sb-name">Alex Johnson</div>
+        <div class="user-role">Admin</div>
+      </div>
+      <i class="fa-solid fa-ellipsis-vertical" style="color:rgba(255,255,255,0.4);font-size:12px;margin-left:auto;"></i>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== MAIN WRAPPER ===== -->
+<div id="main-wrapper">
+
+  <!-- TOP HEADER -->
+  <header id="top-header">
+    <div class="header-search">
+      <i class="fa-solid fa-magnifying-glass search-icon"></i>
+      <input type="text" placeholder="Search contacts, deals, campaigns..." id="global-search" oninput="handleGlobalSearch(this.value)">
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary btn-sm" onclick="openQuickAdd()">
+        <i class="fa-solid fa-plus"></i> Quick Add
+      </button>
+      <div class="header-divider"></div>
+      <div style="position:relative;">
+        <button class="header-btn" onclick="toggleNotifications()" id="notif-btn">
+          <i class="fa-regular fa-bell"></i>
+          <span class="notif-dot"></span>
+        </button>
+        <div class="dropdown-menu" id="notif-dropdown">
+          <div class="dropdown-header">
+            Notifications <span style="color:#0066ff;font-size:12px;cursor:pointer;">Mark all read</span>
+          </div>
+          <div class="dropdown-item">
+            <div style="width:34px;height:34px;background:rgba(16,185,129,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fa-solid fa-trophy" style="color:#10b981;font-size:13px;"></i></div>
+            <div><div style="font-size:13px;font-weight:600;">Deal closed: Angela Davis</div><div style="font-size:12px;color:#6b7280;">$65,000 — PharmaCo Health</div><div style="font-size:11px;color:#9ca3af;margin-top:2px;">2 hours ago</div></div>
+          </div>
+          <div class="dropdown-item">
+            <div style="width:34px;height:34px;background:rgba(0,102,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fa-solid fa-user-plus" style="color:#0066ff;font-size:13px;"></i></div>
+            <div><div style="font-size:13px;font-weight:600;">New lead: Stephanie Moore</div><div style="font-size:12px;color:#6b7280;">FashionBrand Co.</div><div style="font-size:11px;color:#9ca3af;margin-top:2px;">3 hours ago</div></div>
+          </div>
+          <div class="dropdown-item">
+            <div style="width:34px;height:34px;background:rgba(139,92,246,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fa-solid fa-calendar" style="color:#8b5cf6;font-size:13px;"></i></div>
+            <div><div style="font-size:13px;font-weight:600;">Demo confirmed: Christopher King</div><div style="font-size:12px;color:#6b7280;">Tomorrow at 1:00 PM</div><div style="font-size:11px;color:#9ca3af;margin-top:2px;">4 hours ago</div></div>
+          </div>
+          <div class="dropdown-item">
+            <div style="width:34px;height:34px;background:rgba(245,158,11,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fa-regular fa-envelope-open" style="color:#f59e0b;font-size:13px;"></i></div>
+            <div><div style="font-size:13px;font-weight:600;">Email opened: Robert Williams</div><div style="font-size:12px;color:#6b7280;">"Enterprise Proposal"</div><div style="font-size:11px;color:#9ca3af;margin-top:2px;">5 hours ago</div></div>
+          </div>
+        </div>
+      </div>
+      <button class="header-btn" onclick="showSection('calendar',document.querySelector('.nav-item:nth-child(10)'))">
+        <i class="fa-regular fa-calendar"></i>
+      </button>
+      <div class="header-divider"></div>
+      <div class="header-user" onclick="toggleUserDropdown()">
+        <div class="avatar" id="hdr-avatar">AJ</div>
+        <span class="user-name" id="hdr-name">Alex Johnson</span>
+        <i class="fa-solid fa-chevron-down" style="font-size:10px;color:#6b7280;margin-left:4px;"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT AREA -->
+  <div id="content-area">
+
+    <!-- ============================= DASHBOARD ============================= -->
+    <div id="section-dashboard" class="section active">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Dashboard</div>
+          <div class="page-subtitle">Welcome back, Alex! Here's what's happening today.</div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <select class="filter-select" style="width:auto;" onchange="updateDashboardPeriod(this.value)">
+            <option value="30">Last 30 days</option>
+            <option value="7">Last 7 days</option>
+            <option value="90">Last 90 days</option>
+            <option value="365">This year</option>
+          </select>
+          <button class="btn btn-primary" onclick="showSection('contacts',document.querySelector('[onclick*=contacts]'))">
+            <i class="fa-solid fa-plus"></i> Add Contact
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Cards -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;" id="kpi-grid">
+        <div class="kpi-card blue">
+          <div class="kpi-icon blue"><i class="fa-solid fa-users"></i></div>
+          <div class="kpi-value" id="kpi-leads">2,847</div>
+          <div class="kpi-label">Total Leads</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-arrow-trend-up"></i> +12.4% vs last period</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-icon green"><i class="fa-solid fa-dollar-sign"></i></div>
+          <div class="kpi-value" id="kpi-revenue">$487K</div>
+          <div class="kpi-label">Total Revenue</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-arrow-trend-up"></i> +18.2% vs last period</div>
+        </div>
+        <div class="kpi-card purple">
+          <div class="kpi-icon purple"><i class="fa-solid fa-calendar-check"></i></div>
+          <div class="kpi-value" id="kpi-appts">156</div>
+          <div class="kpi-label">Appointments</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-arrow-trend-up"></i> +8.7% vs last period</div>
+        </div>
+        <div class="kpi-card orange">
+          <div class="kpi-icon orange"><i class="fa-solid fa-percent"></i></div>
+          <div class="kpi-value" id="kpi-conv">24.8%</div>
+          <div class="kpi-label">Conversion Rate</div>
+          <div class="kpi-trend up"><i class="fa-solid fa-arrow-trend-up"></i> +3.1% vs last period</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:24px;">
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div>
+              <div style="font-size:15px;font-weight:700;">Revenue Overview</div>
+              <div style="font-size:12px;color:#6b7280;">Monthly revenue for 2024</div>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-secondary btn-sm chart-toggle active-chart" onclick="switchChart('revenue',this)">Revenue</button>
+              <button class="btn btn-secondary btn-sm chart-toggle" onclick="switchChart('leads',this)">Leads</button>
+            </div>
+          </div>
+          <div class="chart-container" style="height:240px;">
+            <canvas id="main-chart"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Pipeline Summary</div>
+          <div style="font-size:12px;color:#6b7280;margin-bottom:16px;">Current stage distribution</div>
+          <div id="pipeline-summary"></div>
+        </div>
+      </div>
+
+      <!-- Bottom Row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <!-- Activity Feed -->
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div style="font-size:15px;font-weight:700;">Recent Activity</div>
+            <button class="btn btn-secondary btn-sm">View All</button>
+          </div>
+          <div id="activity-feed"></div>
+        </div>
+
+        <!-- Top Contacts -->
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div style="font-size:15px;font-weight:700;">Top Opportunities</div>
+            <button class="btn btn-secondary btn-sm" onclick="showSection('opportunities',document.querySelector('[onclick*=opportunities]'))">View All</button>
+          </div>
+          <div id="top-opportunities"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================= CONTACTS ============================= -->
+    <div id="section-contacts" class="section">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Contacts</div>
+          <div class="page-subtitle" id="contacts-count-label">25 contacts total</div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-secondary"><i class="fa-solid fa-upload"></i> Import</button>
+          <button class="btn btn-primary" onclick="openAddContact()"><i class="fa-solid fa-plus"></i> Add Contact</button>
+        </div>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="card" style="margin-bottom:16px;padding:14px 20px;">
+        <div class="filter-bar">
+          <div class="search-input" style="max-width:300px;">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" placeholder="Search contacts..." id="contact-search" oninput="filterContacts()">
+          </div>
+          <select class="filter-select" id="filter-status" onchange="filterContacts()">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+          <select class="filter-select" id="filter-stage" onchange="filterContacts()">
+            <option value="">All Stages</option>
+            <option value="New Lead">New Lead</option>
+            <option value="Contacted">Contacted</option>
+            <option value="Proposal">Proposal</option>
+            <option value="Won">Won</option>
+            <option value="Lost">Lost</option>
+          </select>
+          <select class="filter-select" id="filter-tag" onchange="filterContacts()">
+            <option value="">All Tags</option>
+            <option value="Hot Lead">Hot Lead</option>
+            <option value="Warm Lead">Warm Lead</option>
+            <option value="Cold Lead">Cold Lead</option>
+            <option value="Enterprise">Enterprise</option>
+            <option value="SMB">SMB</option>
+          </select>
+          <button class="btn btn-secondary btn-sm" onclick="clearContactFilters()"><i class="fa-solid fa-xmark"></i> Clear</button>
+          <div style="margin-left:auto;font-size:13px;color:#6b7280;" id="filter-result-count"></div>
+        </div>
+      </div>
+
+      <!-- Contacts Table -->
+      <div class="card" style="padding:0;overflow:hidden;">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th style="padding-left:20px;"><input type="checkbox" id="select-all" onchange="selectAllContacts(this)" style="accent-color:#0066ff;"></th>
+                <th>Contact</th>
+                <th>Company</th>
+                <th>Tags</th>
+                <th>Status</th>
+                <th>Stage</th>
+                <th>Value</th>
+                <th>Last Activity</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="contacts-tbody"></tbody>
+          </table>
+        </div>
+        <div style="padding:14px 20px;border-top:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:13px;color:#6b7280;" id="table-pagination-info">Showing 1-25 of 25</div>
+          <div style="display:flex;gap:6px;">
+            <button class="btn btn-secondary btn-sm" disabled>Previous</button>
+            <button class="btn btn-secondary btn-sm" style="background:#0066ff;color:white;border-color:#0066ff;">1</button>
+            <button class="btn btn-secondary btn-sm" disabled>Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================= OPPORTUNITIES ============================= -->
+    <div id="section-opportunities" class="section">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Pipeline</div>
+          <div class="page-subtitle">Drag cards between stages to update status</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <div style="font-size:13px;color:#6b7280;">Total Pipeline: <strong style="color:#0066ff;" id="total-pipeline-value">$0</strong></div>
+          <button class="btn btn-secondary"><i class="fa-solid fa-sliders"></i> Filter</button>
+          <button class="btn btn-primary" onclick="openAddOpportunity()"><i class="fa-solid fa-plus"></i> Add Deal</button>
+        </div>
+      </div>
+
+      <div class="pipeline-board" id="pipeline-board"></div>
+    </div>
+
+    <!-- ============================= CONVERSATIONS ============================= -->
+    <div id="section-conversations" class="section">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Conversations</div>
+          <div class="page-subtitle">Manage all your SMS and email conversations</div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-secondary"><i class="fa-solid fa-filter"></i> Filter</button>
+          <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> New Conversation</button>
+        </div>
+      </div>
+
+      <div class="conversations-layout">
+        <!-- Left: thread list -->
+        <div class="conv-list">
+          <div class="conv-list-header">
+            <div class="search-input">
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+              <input type="text" placeholder="Search conversations..." oninput="filterConversations(this.value)">
+            </div>
+            <div class="conv-tabs">
+              <div class="conv-tab active" onclick="filterConvChannel('all',this)">All</div>
+              <div class="conv-tab" onclick="filterConvChannel('email',this)"><i class="fa-regular fa-envelope"></i> Email</div>
+              <div class="conv-tab" onclick="filterConvChannel('sms',this)"><i class="fa-solid fa-mobile-screen"></i> SMS</div>
+            </div>
+          </div>
+          <div id="conv-thread-list"></div>
+        </div>
+
+        <!-- Right: chat -->
+        <div class="chat-area" id="chat-area">
+          <div style="display:flex;align-items:center;justify-content:center;height:100%;color:#9ca3af;flex-direction:column;gap:12px;">
+            <i class="fa-regular fa-comment-dots" style="font-size:48px;opacity:0.3;"></i>
+            <div style="font-size:14px;font-weight:500;">Select a conversation to view messages</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================= CALENDAR ============================= -->
+    <div id="section-calendar" class="section">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Calendar</div>
+          <div class="page-subtitle" id="cal-month-label">March 2024</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <div style="display:flex;gap:4px;">
+            <button class="btn btn-secondary btn-sm" onclick="changeCalMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="btn btn-secondary btn-sm" onclick="changeCalMonth(0)">Today</button>
+            <button class="btn btn-secondary btn-sm" onclick="changeCalMonth(1)"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+          <div style="display:flex;gap:4px;background:#f3f4f6;padding:3px;border-radius:8px;">
+            <button class="btn btn-sm" id="view-month" style="background:white;color:#111827;box-shadow:0 1px 3px rgba(0,0,0,0.1);" onclick="setCalView('month',this)">Month</button>
+            <button class="btn btn-sm" style="background:transparent;color:#6b7280;border:none;" id="view-week" onclick="setCalView('week',this)">Week</button>
+          </div>
+          <button class="btn btn-primary" onclick="openAddAppointment()"><i class="fa-solid fa-plus"></i> Book Appointment</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:16px;">
+        <!-- Calendar grid -->
+        <div class="card" style="padding:0;overflow:hidden;">
+          <div class="calendar-grid" id="calendar-grid"></div>
+        </div>
+
+        <!-- Upcoming appointments -->
+        <div class="card">
+          <div style="font-size:15px;font-weight:700;margin-bottom:16px;">Upcoming</div>
+          <div id="upcoming-appointments"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================= CAMPAIGNS ============================= -->
+    <div id="section-campaigns" class="section">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Campaigns</div>
+          <div class="page-subtitle">Manage email and SMS campaigns</div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <select class="filter-select" id="campaign-type-filter" onchange="filterCampaigns()" style="width:auto;">
+            <option value="">All Types</option>
+            <option value="Email">Email</option>
+            <option value="SMS">SMS</option>
+          </select>
+          <select class="filter-select" id="campaign-status-filter" onchange="filterCampaigns()" style="width:auto;">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="draft">Draft</option>
+            <option value="completed">Completed</option>
+          </select>
+          <button class="btn btn-primary" onclick="openCreateCampaign()"><i class="fa-solid fa-plus"></i> Create Campaign</button>
+        </div>
+      </div>
+
+      <!-- Campaign Stats Row -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+        <div class="card" style="text-align:center;">
+          <div style="font-size:24px;font-weight:800;color:#111827;">8</div>
+          <div style="font-size:12px;color:#6b7280;font-weight:500;">Total Campaigns</div>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div style="font-size:24px;font-weight:800;color:#0066ff;">15,020</div>
+          <div style="font-size:12px;color:#6b7280;font-weight:500;">Total Sent</div>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div style="font-size:24px;font-weight:800;color:#10b981;">52.7%</div>
+          <div style="font-size:12px;color:#6b7280;font-weight:500;">Avg Open Rate</div>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div style="font-size:24px;font-weight:800;color:#8b5cf6;">$232,600</div>
+          <div style="font-size:12px;color:#6b7280;font-weight:500;">Total Revenue</div>
+        </div>
+      </div>
+
+      <div id="campaigns-list"></div>
+    </div>
+
+    <!-- ============================= WORKFLOWS ============================= -->
+    <div id="section-workflows" class="section">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Workflows</div>
+          <div class="page-subtitle">Automate your marketing and sales processes</div>
+        </div>
+        <button class="btn btn-primary" onclick="openCreateWorkflow()"><i class="fa-solid fa-plus"></i> Create Workflow</button>
+      </div>
+
+      <!-- Workflow List -->
+      <div style="display:grid;gap:14px;margin-bottom:24px;" id="workflow-list"></div>
+
+      <!-- Visual Workflow Builder Preview -->
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+          <div>
+            <div style="font-size:15px;font-weight:700;">Workflow Builder</div>
+            <div style="font-size:12px;color:#6b7280;">New Lead Welcome Sequence</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-secondary btn-sm"><i class="fa-solid fa-play"></i> Test</button>
+            <button class="btn btn-primary btn-sm"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+          </div>
+        </div>
+        <div class="workflow-canvas" id="workflow-canvas"></div>
+      </div>
+    </div>
+
+    <!-- ============================= FUNNELS ============================= -->
+    <div id="section-funnels" class="section">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Sites &amp; Funnels</div>
+          <div class="page-subtitle">Build and manage your conversion funnels</div>
+        </div>
+        <button class="btn btn-primary" onclick="openCreateFunnel()"><i class="fa-solid fa-plus"></i> Create Funnel</button>
+      </div>
+
+      <!-- Stats -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+        <div class="card" style="text-align:center;"><div style="font-size:24px;font-weight:800;">6</div><div style="font-size:12px;color:#6b7280;">Active Funnels</div></div>
+        <div class="card" style="text-align:center;"><div style="font-size:24px;font-weight:800;color:#0066ff;">48,900</div><div style="font-size:12px;color:#6b7280;">Total Visitors</div></div>
+        <div class="card" style="text-align:center;"><div style="font-size:24px;font-weight:800;color:#10b981;">10,470</div><div style="font-size:12px;color:#6b7280;">Conversions</div></div>
+        <div class="card" style="text-align:center;"><div style="font-size:24px;font-weight:800;color:#8b5cf6;">$541,620</div><div style="font-size:12px;color:#6b7280;">Revenue Generated</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;" id="funnels-grid"></div>
+    </div>
+
+    <!-- ============================= REPORTING ============================= -->
+    <div id="section-reporting" class="section">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Reporting</div>
+          <div class="page-subtitle">Comprehensive analytics and performance insights</div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <select class="filter-select" style="width:auto;">
+            <option>Last 30 Days</option>
+            <option>Last Quarter</option>
+            <option>This Year</option>
+            <option>Custom Range</option>
+          </select>
+          <button class="btn btn-secondary"><i class="fa-solid fa-download"></i> Export</button>
+        </div>
+      </div>
+
+      <!-- Report KPIs -->
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;" id="report-kpis"></div>
+
+      <!-- Charts Row 1 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+        <div class="card">
+          <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Revenue Over Time</div>
+          <div style="font-size:12px;color:#6b7280;margin-bottom:16px;">Monthly revenue trend</div>
+          <div class="chart-container" style="height:220px;"><canvas id="report-revenue-chart"></canvas></div>
+        </div>
+        <div class="card">
+          <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Leads Generated</div>
+          <div style="font-size:12px;color:#6b7280;margin-bottom:16px;">New leads per month</div>
+          <div class="chart-container" style="height:220px;"><canvas id="report-leads-chart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Charts Row 2 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+        <div class="card">
+          <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Pipeline by Stage</div>
+          <div style="font-size:12px;color:#6b7280;margin-bottom:16px;">Deal distribution</div>
+          <div class="chart-container" style="height:200px;"><canvas id="report-pipeline-chart"></canvas></div>
+        </div>
+        <div class="card">
+          <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Campaign Performance</div>
+          <div style="font-size:12px;color:#6b7280;margin-bottom:16px;">Open vs click rates</div>
+          <div class="chart-container" style="height:200px;"><canvas id="report-campaign-chart"></canvas></div>
+        </div>
+        <div class="card">
+          <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Conversion Funnel</div>
+          <div style="font-size:12px;color:#6b7280;margin-bottom:16px;">Lead to close rate</div>
+          <div class="chart-container" style="height:200px;"><canvas id="report-funnel-chart"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content-area -->
+</div><!-- /main-wrapper -->
+
+<!-- ============================= MODALS ============================= -->
+
+<!-- Add/Edit Contact Modal -->
+<div class="modal-overlay" id="contact-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="contact-modal-title">Add New Contact</div>
+      <button class="modal-close" onclick="closeModal('contact-modal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">First Name *</label>
+          <input type="text" class="form-input" id="c-fname" placeholder="John">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name *</label>
+          <input type="text" class="form-input" id="c-lname" placeholder="Smith">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address *</label>
+        <input type="email" class="form-input" id="c-email" placeholder="john@company.com">
+      </div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          <input type="tel" class="form-input" id="c-phone" placeholder="+1 (555) 000-0000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Company</label>
+          <input type="text" class="form-input" id="c-company" placeholder="Company Inc.">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="c-status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Stage</label>
+          <select class="form-select" id="c-stage">
+            <option value="New Lead">New Lead</option>
+            <option value="Contacted">Contacted</option>
+            <option value="Proposal">Proposal</option>
+            <option value="Won">Won</option>
+            <option value="Lost">Lost</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Deal Value ($)</label>
+        <input type="number" class="form-input" id="c-value" placeholder="5000">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tags (comma separated)</label>
+        <input type="text" class="form-input" id="c-tags" placeholder="Hot Lead, Enterprise">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-textarea" id="c-notes" placeholder="Add notes about this contact..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('contact-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveContact()"><i class="fa-solid fa-floppy-disk"></i> Save Contact</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Opportunity Modal -->
+<div class="modal-overlay" id="opportunity-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="opp-modal-title">Add New Deal</div>
+      <button class="modal-close" onclick="closeModal('opportunity-modal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Deal Title *</label>
+        <input type="text" class="form-input" id="o-title" placeholder="e.g. Enterprise Package - Acme Corp">
+      </div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Contact Name</label>
+          <input type="text" class="form-input" id="o-contact" placeholder="Jane Doe">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Company</label>
+          <input type="text" class="form-input" id="o-company" placeholder="Acme Corp">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Deal Value ($) *</label>
+          <input type="number" class="form-input" id="o-value" placeholder="10000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pipeline Stage</label>
+          <select class="form-select" id="o-stage">
+            <option value="New Lead">New Lead</option>
+            <option value="Contacted">Contacted</option>
+            <option value="Proposal">Proposal</option>
+            <option value="Won">Won</option>
+            <option value="Lost">Lost</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Close Date</label>
+          <input type="date" class="form-input" id="o-date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Win Probability (%)</label>
+          <input type="number" class="form-input" id="o-prob" min="0" max="100" placeholder="50">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-textarea" id="o-notes" placeholder="Deal notes..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('opportunity-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveOpportunity()"><i class="fa-solid fa-floppy-disk"></i> Save Deal</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create Campaign Modal -->
+<div class="modal-overlay" id="campaign-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Create Campaign</div>
+      <button class="modal-close" onclick="closeModal('campaign-modal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Campaign Name *</label>
+        <input type="text" class="form-input" id="camp-name" placeholder="e.g. Spring Promo 2024">
+      </div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Type</label>
+          <select class="form-select" id="camp-type">
+            <option value="Email">Email</option>
+            <option value="SMS">SMS</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Audience</label>
+          <select class="form-select" id="camp-audience">
+            <option>All Contacts</option>
+            <option>New Leads</option>
+            <option>Warm Leads</option>
+            <option>Enterprise Prospects</option>
+            <option>Expiring Soon</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Subject / Message</label>
+        <input type="text" class="form-input" id="camp-subject" placeholder="Subject line or SMS preview...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Schedule</label>
+        <select class="form-select" id="camp-schedule">
+          <option>Send immediately</option>
+          <option>Schedule for later</option>
+          <option>Save as draft</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message Body</label>
+        <textarea class="form-textarea" id="camp-body" style="min-height:120px;" placeholder="Write your message here..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('campaign-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCampaign()"><i class="fa-solid fa-paper-plane"></i> Launch Campaign</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Appointment Modal -->
+<div class="modal-overlay" id="appointment-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Book Appointment</div>
+      <button class="modal-close" onclick="closeModal('appointment-modal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Title *</label>
+        <input type="text" class="form-input" id="apt-title" placeholder="e.g. Demo Call - Acme Corp">
+      </div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Contact Name</label>
+          <input type="text" class="form-input" id="apt-contact" placeholder="Contact name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type</label>
+          <select class="form-select" id="apt-type">
+            <option>Demo</option>
+            <option>Discovery</option>
+            <option>Follow-up</option>
+            <option>Onboarding</option>
+            <option>Contract</option>
+            <option>Check-in</option>
+            <option>Strategy</option>
+            <option>Renewal</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Date *</label>
+          <input type="date" class="form-input" id="apt-date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Time</label>
+          <input type="time" class="form-input" id="apt-time">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Duration (minutes)</label>
+        <select class="form-select" id="apt-duration">
+          <option value="15">15 min</option>
+          <option value="30">30 min</option>
+          <option value="45" selected>45 min</option>
+          <option value="60">60 min</option>
+          <option value="90">90 min</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-textarea" id="apt-notes" placeholder="Appointment notes..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('appointment-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveAppointment()"><i class="fa-solid fa-calendar-check"></i> Book Appointment</button>
+    </div>
+  </div>
+</div>
+
+<!-- Contact Detail Modal -->
+<div class="modal-overlay" id="contact-detail-modal">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-header">
+      <div class="modal-title">Contact Details</div>
+      <button class="modal-close" onclick="closeModal('contact-detail-modal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" id="contact-detail-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('contact-detail-modal')">Close</button>
+      <button class="btn btn-secondary" id="edit-contact-btn"><i class="fa-solid fa-pen"></i> Edit</button>
+      <button class="btn btn-primary"><i class="fa-solid fa-message"></i> Send Message</button>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Add Modal -->
+<div class="modal-overlay" id="quick-add-modal">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-header">
+      <div class="modal-title">Quick Add</div>
+      <button class="modal-close" onclick="closeModal('quick-add-modal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <button class="card" style="text-align:center;cursor:pointer;border:2px solid transparent;transition:all 0.2s;" onclick="closeModal('quick-add-modal');openAddContact();" onmouseover="this.style.borderColor='#0066ff'" onmouseout="this.style.borderColor='transparent'">
+          <i class="fa-solid fa-user-plus" style="font-size:24px;color:#0066ff;margin-bottom:8px;display:block;"></i>
+          <div style="font-size:13px;font-weight:600;">Contact</div>
+        </button>
+        <button class="card" style="text-align:center;cursor:pointer;border:2px solid transparent;transition:all 0.2s;" onclick="closeModal('quick-add-modal');openAddOpportunity();" onmouseover="this.style.borderColor='#0066ff'" onmouseout="this.style.borderColor='transparent'">
+          <i class="fa-solid fa-handshake" style="font-size:24px;color:#10b981;margin-bottom:8px;display:block;"></i>
+          <div style="font-size:13px;font-weight:600;">Deal</div>
+        </button>
+        <button class="card" style="text-align:center;cursor:pointer;border:2px solid transparent;transition:all 0.2s;" onclick="closeModal('quick-add-modal');openAddAppointment();" onmouseover="this.style.borderColor='#0066ff'" onmouseout="this.style.borderColor='transparent'">
+          <i class="fa-solid fa-calendar-plus" style="font-size:24px;color:#8b5cf6;margin-bottom:8px;display:block;"></i>
+          <div style="font-size:13px;font-weight:600;">Appointment</div>
+        </button>
+        <button class="card" style="text-align:center;cursor:pointer;border:2px solid transparent;transition:all 0.2s;" onclick="closeModal('quick-add-modal');openCreateCampaign();" onmouseover="this.style.borderColor='#0066ff'" onmouseout="this.style.borderColor='transparent'">
+          <i class="fa-solid fa-paper-plane" style="font-size:24px;color:#f59e0b;margin-bottom:8px;display:block;"></i>
+          <div style="font-size:13px;font-weight:600;">Campaign</div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast" style="position:fixed;bottom:24px;right:24px;z-index:9999;display:none;">
+  <div style="background:#1f2937;color:white;padding:12px 18px;border-radius:10px;font-size:13.5px;font-weight:500;display:flex;align-items:center;gap:10px;box-shadow:0 8px 25px rgba(0,0,0,0.3);max-width:320px;">
+    <i class="fa-solid fa-check-circle" style="color:#10b981;font-size:16px;" id="toast-icon"></i>
+    <span id="toast-msg">Saved successfully!</span>
+  </div>
+</div>
+
+<script>
+// ==================== INIT ====================
+initializeData();
+const user = JSON.parse(localStorage.getItem('lf_user') || '{"name":"Alex Johnson","avatar":"AJ"}');
+document.getElementById('sb-name').textContent = user.name;
+document.getElementById('sb-avatar').textContent = user.avatar || 'AJ';
+document.getElementById('hdr-name').textContent = user.name;
+document.getElementById('hdr-avatar').textContent = user.avatar || 'AJ';
+
+// ==================== NAVIGATION ====================
+let currentSection = 'dashboard';
+let chartsInitialized = {};
+
+function showSection(name, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  if (el) el.classList.add('active');
+  currentSection = name;
+  closeAllDropdowns();
+
+  // Lazy-init sections
+  if (name === 'dashboard' && !chartsInitialized.dashboard) { initDashboard(); chartsInitialized.dashboard = true; }
+  if (name === 'contacts') renderContacts();
+  if (name === 'opportunities') renderPipeline();
+  if (name === 'conversations' && !chartsInitialized.conversations) { renderConversations(); chartsInitialized.conversations = true; }
+  if (name === 'calendar') renderCalendar();
+  if (name === 'campaigns') renderCampaigns();
+  if (name === 'workflows') { renderWorkflows(); renderWorkflowCanvas(); }
+  if (name === 'funnels') renderFunnels();
+  if (name === 'reporting' && !chartsInitialized.reporting) { initReporting(); chartsInitialized.reporting = true; }
+}
+
+// ==================== DASHBOARD ====================
+function initDashboard() {
+  renderActivityFeed();
+  renderPipelineSummary();
+  renderTopOpportunities();
+  initMainChart('revenue');
+}
+
+function renderActivityFeed() {
+  const feed = document.getElementById('activity-feed');
+  const activities = AppData.activities;
+  feed.innerHTML = activities.map(a => `
+    <div class="activity-item">
+      <div class="activity-icon ${a.color}"><i class="fa-solid fa-${a.icon}"></i></div>
+      <div>
+        <div class="activity-text">${a.text}</div>
+        <div class="activity-time">${a.time}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderPipelineSummary() {
+  const opps = getData('opportunities');
+  const stages = ['New Lead','Contacted','Proposal','Won','Lost'];
+  const colors = ['#6366f1','#f59e0b','#0066ff','#10b981','#ef4444'];
+  const totals = {};
+  stages.forEach(s => totals[s] = { count: 0, value: 0 });
+  opps.forEach(o => { if (totals[o.stage]) { totals[o.stage].count++; totals[o.stage].value += o.value; } });
+  const maxVal = Math.max(...Object.values(totals).map(t => t.value));
+  const container = document.getElementById('pipeline-summary');
+  container.innerHTML = stages.map((s, i) => `
+    <div class="pipeline-summary-row">
+      <div class="pipeline-summary-stage">
+        <div class="stage-dot" style="background:${colors[i]}"></div>
+        <span style="font-size:12px;font-weight:600;">${s}</span>
+      </div>
+      <div class="pipeline-summary-bar">
+        <div class="pipeline-bar-fill" style="width:${maxVal ? (totals[s].value/maxVal*100) : 0}%;background:${colors[i]};"></div>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:#111827;min-width:60px;text-align:right;">$${(totals[s].value/1000).toFixed(0)}K</div>
+    </div>
+  `).join('');
+}
+
+function renderTopOpportunities() {
+  const opps = getData('opportunities').filter(o => o.stage !== 'Lost').sort((a,b) => b.value - a.value).slice(0,5);
+  const stageColors = { 'New Lead':'blue','Contacted':'yellow','Proposal':'purple','Won':'green','Lost':'red' };
+  document.getElementById('top-opportunities').innerHTML = opps.map(o => `
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f3f4f6;">
+      <div style="width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#0066ff,#00d4aa);display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:700;flex-shrink:0;">
+        ${o.contact.split(' ').map(n=>n[0]).join('').slice(0,2)}
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${o.title}</div>
+        <div style="font-size:11.5px;color:#6b7280;">${o.company}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div style="font-size:14px;font-weight:800;color:#0066ff;">$${o.value.toLocaleString()}</div>
+        <span class="badge badge-${stageColors[o.stage] || 'gray'}" style="font-size:10px;">${o.stage}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+let mainChart = null;
+function initMainChart(type) {
+  const ctx = document.getElementById('main-chart');
+  if (!ctx) return;
+  if (mainChart) mainChart.destroy();
+  const data = type === 'revenue' ? AppData.revenueData : AppData.leadsData;
+  const color = type === 'revenue' ? '#0066ff' : '#10b981';
+  mainChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.labels,
+      datasets: [{
+        label: type === 'revenue' ? 'Revenue ($)' : 'Leads',
+        data: data.data,
+        borderColor: color,
+        backgroundColor: color + '15',
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: color,
+        pointRadius: 4,
+        pointHoverRadius: 6
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+        y: {
+          grid: { color: '#f3f4f6' },
+          ticks: {
+            font: { size: 11 },
+            callback: v => type === 'revenue' ? '$' + (v >= 1000 ? (v/1000).toFixed(0)+'K' : v) : v
+          }
+        }
+      }
+    }
+  });
+}
+
+function switchChart(type, btn) {
+  document.querySelectorAll('.chart-toggle').forEach(b => b.classList.remove('active-chart', 'btn-primary'));
+  btn.style.background = '#0066ff';
+  btn.style.color = 'white';
+  btn.style.borderColor = '#0066ff';
+  document.querySelectorAll('.chart-toggle').forEach(b => {
+    if (b !== btn) { b.style.background = ''; b.style.color = ''; b.style.borderColor = ''; }
+  });
+  initMainChart(type);
+}
+
+// ==================== CONTACTS ====================
+let editingContactId = null;
+let filteredContacts = null;
+
+function renderContacts() {
+  const contacts = filteredContacts || getData('contacts');
+  const tbody = document.getElementById('contacts-tbody');
+  if (!contacts.length) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:40px;color:#6b7280;">No contacts found</td></tr>';
+    return;
+  }
+  const tagColors = ['blue','green','purple','yellow','indigo','teal','orange'];
+  tbody.innerHTML = contacts.map((c, i) => {
+    const avatarGrad = `linear-gradient(135deg,${['#0066ff,#00d4aa','#10b981,#059669','#8b5cf6,#6d28d9','#f59e0b,#d97706','#ef4444,#dc2626'][i % 5]})`;
+    const tags = c.tags.map((t,j) => `<span class="tag" style="background:rgba(0,102,255,0.08);color:#0066ff;">${t}</span>`).join('');
+    const stageBadge = { 'New Lead':'badge-indigo','Contacted':'badge-yellow','Proposal':'badge-purple','Won':'badge-green','Lost':'badge-red' };
+    const statusColor = c.status === 'active' ? 'badge-green' : 'badge-gray';
+    return `
+      <tr>
+        <td style="padding-left:20px;"><input type="checkbox" style="accent-color:#0066ff;"></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="contact-avatar" style="background:${avatarGrad};">${c.avatar}</div>
+            <div>
+              <div style="font-weight:600;font-size:13.5px;cursor:pointer;color:#0066ff;" onclick="viewContact(${c.id})">${c.name}</div>
+              <div style="font-size:12px;color:#6b7280;">${c.email}</div>
+            </div>
+          </div>
+        </td>
+        <td style="font-size:13px;">${c.company}</td>
+        <td>${tags}</td>
+        <td><span class="badge ${statusColor}">${c.status === 'active' ? 'Active' : 'Inactive'}</span></td>
+        <td><span class="badge ${stageBadge[c.stage] || 'badge-gray'}">${c.stage}</span></td>
+        <td style="font-weight:700;color:#0066ff;">$${c.value.toLocaleString()}</td>
+        <td style="font-size:12px;color:#6b7280;">${c.lastActivity}</td>
+        <td>
+          <div style="display:flex;gap:4px;">
+            <button class="btn btn-secondary btn-sm btn-icon" onclick="viewContact(${c.id})" title="View"><i class="fa-regular fa-eye"></i></button>
+            <button class="btn btn-secondary btn-sm btn-icon" onclick="editContact(${c.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn btn-secondary btn-sm btn-icon" onclick="deleteContact(${c.id})" title="Delete" style="color:#ef4444;"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+  document.getElementById('contacts-count-label').textContent = `${contacts.length} contact${contacts.length !== 1 ? 's' : ''} total`;
+  document.getElementById('table-pagination-info').textContent = `Showing 1-${contacts.length} of ${contacts.length}`;
+  document.getElementById('filter-result-count').textContent = filteredContacts ? `${contacts.length} results` : '';
+}
+
+function filterContacts() {
+  const search = document.getElementById('contact-search').value.toLowerCase();
+  const status = document.getElementById('filter-status').value;
+  const stage = document.getElementById('filter-stage').value;
+  const tag = document.getElementById('filter-tag').value;
+  let contacts = getData('contacts');
+  if (search) contacts = contacts.filter(c => c.name.toLowerCase().includes(search) || c.email.toLowerCase().includes(search) || c.company.toLowerCase().includes(search));
+  if (status) contacts = contacts.filter(c => c.status === status);
+  if (stage) contacts = contacts.filter(c => c.stage === stage);
+  if (tag) contacts = contacts.filter(c => c.tags.some(t => t.includes(tag)));
+  filteredContacts = contacts;
+  renderContacts();
+}
+
+function clearContactFilters() {
+  document.getElementById('contact-search').value = '';
+  document.getElementById('filter-status').value = '';
+  document.getElementById('filter-stage').value = '';
+  document.getElementById('filter-tag').value = '';
+  filteredContacts = null;
+  renderContacts();
+}
+
+function selectAllContacts(cb) {
+  document.querySelectorAll('#contacts-tbody input[type=checkbox]').forEach(c => c.checked = cb.checked);
+}
+
+function viewContact(id) {
+  const contacts = getData('contacts');
+  const c = contacts.find(x => x.id === id);
+  if (!c) return;
+  const stageBadge = { 'New Lead':'badge-indigo','Contacted':'badge-yellow','Proposal':'badge-purple','Won':'badge-green','Lost':'badge-red' };
+  document.getElementById('contact-detail-body').innerHTML = `
+    <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:24px;">
+      <div class="contact-avatar" style="width:56px;height:56px;font-size:18px;background:linear-gradient(135deg,#0066ff,#00d4aa);">${c.avatar}</div>
+      <div style="flex:1;">
+        <div style="font-size:20px;font-weight:700;">${c.name}</div>
+        <div style="font-size:13px;color:#6b7280;">${c.company}</div>
+        <div style="display:flex;gap:6px;margin-top:8px;">
+          <span class="badge ${c.status === 'active' ? 'badge-green' : 'badge-gray'}">${c.status}</span>
+          <span class="badge ${stageBadge[c.stage] || 'badge-gray'}">${c.stage}</span>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:22px;font-weight:800;color:#0066ff;">$${c.value.toLocaleString()}</div>
+        <div style="font-size:12px;color:#6b7280;">Deal Value</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;">
+        <div style="font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Email</div>
+        <div style="font-size:13.5px;font-weight:500;">${c.email}</div>
+      </div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;">
+        <div style="font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Phone</div>
+        <div style="font-size:13.5px;font-weight:500;">${c.phone}</div>
+      </div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;">
+        <div style="font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Date Added</div>
+        <div style="font-size:13.5px;font-weight:500;">${c.dateAdded}</div>
+      </div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;">
+        <div style="font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Last Activity</div>
+        <div style="font-size:13.5px;font-weight:500;">${c.lastActivity}</div>
+      </div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Tags</div>
+      <div>${c.tags.map(t => `<span class="tag" style="background:rgba(0,102,255,0.08);color:#0066ff;">${t}</span>`).join('')}</div>
+    </div>
+    <div>
+      <div style="font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Notes</div>
+      <div style="font-size:13.5px;line-height:1.6;color:#374151;">${c.notes || 'No notes added.'}</div>
+    </div>
+  `;
+  document.getElementById('edit-contact-btn').onclick = () => { closeModal('contact-detail-modal'); editContact(id); };
+  openModal('contact-detail-modal');
+}
+
+function openAddContact() { editingContactId = null; document.getElementById('contact-modal-title').textContent = 'Add New Contact'; ['c-fname','c-lname','c-email','c-phone','c-company','c-tags','c-notes'].forEach(id => document.getElementById(id).value = ''); document.getElementById('c-value').value = ''; document.getElementById('c-status').value = 'active'; document.getElementById('c-stage').value = 'New Lead'; openModal('contact-modal'); }
+
+function editContact(id) {
+  const contacts = getData('contacts');
+  const c = contacts.find(x => x.id === id);
+  if (!c) return;
+  editingContactId = id;
+  document.getElementById('contact-modal-title').textContent = 'Edit Contact';
+  const names = c.name.split(' ');
+  document.getElementById('c-fname').value = names[0] || '';
+  document.getElementById('c-lname').value = names.slice(1).join(' ') || '';
+  document.getElementById('c-email').value = c.email;
+  document.getElementById('c-phone').value = c.phone;
+  document.getElementById('c-company').value = c.company;
+  document.getElementById('c-status').value = c.status;
+  document.getElementById('c-stage').value = c.stage;
+  document.getElementById('c-value').value = c.value;
+  document.getElementById('c-tags').value = c.tags.join(', ');
+  document.getElementById('c-notes').value = c.notes;
+  openModal('contact-modal');
+}
+
+function saveContact() {
+  const fname = document.getElementById('c-fname').value.trim();
+  const lname = document.getElementById('c-lname').value.trim();
+  if (!fname) { alert('First name is required'); return; }
+  const contacts = getData('contacts');
+  const contactData = {
+    name: `${fname} ${lname}`.trim(),
+    email: document.getElementById('c-email').value.trim(),
+    phone: document.getElementById('c-phone').value.trim(),
+    company: document.getElementById('c-company').value.trim(),
+    status: document.getElementById('c-status').value,
+    stage: document.getElementById('c-stage').value,
+    value: parseInt(document.getElementById('c-value').value) || 0,
+    tags: document.getElementById('c-tags').value.split(',').map(t => t.trim()).filter(t => t),
+    notes: document.getElementById('c-notes').value.trim(),
+    avatar: (fname[0] + (lname[0] || '')).toUpperCase(),
+    lastActivity: new Date().toISOString().slice(0,10),
+    dateAdded: new Date().toISOString().slice(0,10)
+  };
+  if (editingContactId) {
+    const idx = contacts.findIndex(c => c.id === editingContactId);
+    if (idx >= 0) contacts[idx] = { ...contacts[idx], ...contactData };
+    showToast('Contact updated successfully!');
+  } else {
+    contactData.id = Date.now();
+    contacts.unshift(contactData);
+    showToast('Contact added successfully!');
+  }
+  saveData('contacts', contacts);
+  filteredContacts = null;
+  closeModal('contact-modal');
+  renderContacts();
+}
+
+function deleteContact(id) {
+  if (!confirm('Delete this contact?')) return;
+  let contacts = getData('contacts').filter(c => c.id !== id);
+  saveData('contacts', contacts);
+  filteredContacts = null;
+  renderContacts();
+  showToast('Contact deleted.', 'trash');
+}
+
+// ==================== PIPELINE ====================
+const STAGES = ['New Lead','Contacted','Proposal','Won','Lost'];
+const STAGE_COLORS = { 'New Lead':'#6366f1','Contacted':'#f59e0b','Proposal':'#0066ff','Won':'#10b981','Lost':'#ef4444' };
+let draggedCard = null;
+
+function renderPipeline() {
+  const opps = getData('opportunities');
+  let total = opps.filter(o => o.stage !== 'Lost').reduce((s, o) => s + o.value, 0);
+  document.getElementById('total-pipeline-value').textContent = '$' + total.toLocaleString();
+  const board = document.getElementById('pipeline-board');
+  board.innerHTML = '';
+  STAGES.forEach(stage => {
+    const stageOpps = opps.filter(o => o.stage === stage);
+    const stageVal = stageOpps.reduce((s, o) => s + o.value, 0);
+    const col = document.createElement('div');
+    col.className = 'pipeline-column';
+    col.dataset.stage = stage;
+    col.innerHTML = `
+      <div class="pipeline-col-header">
+        <div class="col-title-wrap">
+          <div class="col-dot" style="background:${STAGE_COLORS[stage]}"></div>
+          <span class="col-title">${stage}</span>
+          <span class="col-count">${stageOpps.length}</span>
+        </div>
+        <div class="col-value">$${(stageVal/1000).toFixed(0)}K</div>
+      </div>
+      <div class="pipeline-col-cards" id="col-${stage.replace(/\s/g,'_')}" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'${stage}')">
+        ${stageOpps.map(o => renderOppCard(o)).join('')}
+        <button onclick="openAddOpportunityInStage('${stage}')" style="width:100%;padding:8px;border:2px dashed #e5e7eb;border-radius:8px;background:transparent;color:#9ca3af;font-size:12px;cursor:pointer;transition:all 0.2s;margin-top:4px;" onmouseover="this.style.borderColor='#0066ff';this.style.color='#0066ff';" onmouseout="this.style.borderColor='#e5e7eb';this.style.color='#9ca3af';"><i class="fa-solid fa-plus"></i> Add Deal</button>
+      </div>
+    `;
+    board.appendChild(col);
+  });
+}
+
+function renderOppCard(o) {
+  return `
+    <div class="opp-card" draggable="true" data-id="${o.id}" ondragstart="onDragStart(event,${o.id})" ondragend="onDragEnd(event)">
+      <div class="opp-title">${o.title}</div>
+      <div class="opp-company"><i class="fa-regular fa-building" style="margin-right:4px;"></i>${o.company}</div>
+      <div class="opp-value">$${o.value.toLocaleString()}</div>
+      <div class="opp-meta">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#0066ff,#00d4aa);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;">
+            ${o.contact.split(' ').map(n=>n[0]).join('').slice(0,2)}
+          </div>
+          <span style="font-size:11.5px;">${o.contact.split(' ')[0]}</span>
+        </div>
+        <div class="opp-prob">
+          <div class="prob-bar"><div class="prob-fill" style="width:${o.probability}%;"></div></div>
+          <span>${o.probability}%</span>
+        </div>
+      </div>
+      <div style="font-size:10.5px;color:#9ca3af;margin-top:6px;"><i class="fa-regular fa-clock" style="margin-right:3px;"></i>${o.daysInStage}d in stage</div>
+    </div>
+  `;
+}
+
+function onDragStart(e, id) {
+  draggedCard = id;
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => { const el = document.querySelector(`[data-id="${id}"]`); if (el) el.classList.add('dragging'); }, 0);
+}
+
+function onDragEnd(e) {
+  document.querySelectorAll('.opp-card').forEach(c => c.classList.remove('dragging'));
+  document.querySelectorAll('.pipeline-col-cards').forEach(c => c.classList.remove('drag-over'));
+}
+
+function onDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+
+function onDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function onDrop(e, stage) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (!draggedCard) return;
+  const opps = getData('opportunities');
+  const opp = opps.find(o => o.id === draggedCard);
+  if (opp && opp.stage !== stage) {
+    opp.stage = stage;
+    if (stage === 'Won') opp.probability = 100;
+    if (stage === 'Lost') opp.probability = 0;
+    saveData('opportunities', opps);
+    showToast(`Moved to ${stage}`);
+    renderPipeline();
+    renderPipelineSummary();
+  }
+  draggedCard = null;
+}
+
+let editingOppStage = null;
+function openAddOpportunity() { editingOppStage = null; document.getElementById('opp-modal-title').textContent = 'Add New Deal'; ['o-title','o-contact','o-company','o-notes'].forEach(id => document.getElementById(id).value = ''); document.getElementById('o-value').value = ''; document.getElementById('o-prob').value = '50'; document.getElementById('o-stage').value = 'New Lead'; document.getElementById('o-date').value = ''; openModal('opportunity-modal'); }
+
+function openAddOpportunityInStage(stage) { openAddOpportunity(); document.getElementById('o-stage').value = stage; }
+
+function saveOpportunity() {
+  const title = document.getElementById('o-title').value.trim();
+  if (!title) { alert('Title is required'); return; }
+  const opps = getData('opportunities');
+  opps.push({
+    id: Date.now(),
+    title,
+    contact: document.getElementById('o-contact').value.trim(),
+    company: document.getElementById('o-company').value.trim(),
+    value: parseInt(document.getElementById('o-value').value) || 0,
+    stage: document.getElementById('o-stage').value,
+    probability: parseInt(document.getElementById('o-prob').value) || 50,
+    closeDate: document.getElementById('o-date').value,
+    daysInStage: 0,
+    notes: document.getElementById('o-notes').value.trim()
+  });
+  saveData('opportunities', opps);
+  closeModal('opportunity-modal');
+  renderPipeline();
+  showToast('Deal added!');
+}
+
+// ==================== CONVERSATIONS ====================
+let activeConvId = null;
+let convFilter = 'all';
+
+function renderConversations(searchTerm) {
+  let convs = getData('conversations');
+  if (convFilter !== 'all') convs = convs.filter(c => c.channel === convFilter);
+  if (searchTerm) convs = convs.filter(c => c.contact.toLowerCase().includes(searchTerm.toLowerCase()) || c.lastMessage.toLowerCase().includes(searchTerm.toLowerCase()));
+
+  const totalUnread = convs.reduce((s, c) => s + c.unread, 0);
+  document.getElementById('conv-badge').textContent = totalUnread;
+
+  const list = document.getElementById('conv-thread-list');
+  list.innerHTML = convs.map(c => {
+    const avatarGrads = ['135deg,#0066ff,#00d4aa','135deg,#10b981,#059669','135deg,#8b5cf6,#6d28d9','135deg,#f59e0b,#d97706','135deg,#ef4444,#dc2626'];
+    const idx = c.id % 5;
+    return `
+      <div class="conv-item ${activeConvId === c.id ? 'active' : ''}" onclick="openConversation(${c.id})">
+        <div class="conv-avatar" style="background:linear-gradient(${avatarGrads[idx]});font-size:14px;">${c.avatar}</div>
+        <div class="conv-info">
+          <div class="conv-name">
+            ${c.contact}
+            <span class="conv-time">${c.time}</span>
+          </div>
+          <div class="conv-preview">${c.lastMessage}</div>
+          <div class="conv-meta">
+            <span class="badge ${c.channel === 'email' ? 'badge-blue' : 'badge-green'}" style="font-size:10px;padding:1px 6px;">
+              <i class="fa-${c.channel === 'email' ? 'regular fa-envelope' : 'solid fa-mobile-screen'}" style="margin-right:2px;"></i>${c.channel}
+            </span>
+            ${c.unread > 0 ? `<span class="unread-badge">${c.unread}</span>` : ''}
+            ${c.status === 'closed' ? `<span class="badge badge-gray" style="font-size:10px;">closed</span>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('') || '<div style="padding:30px;text-align:center;color:#9ca3af;font-size:13px;">No conversations found</div>';
+}
+
+function filterConversations(val) { renderConversations(val); }
+function filterConvChannel(ch, el) {
+  convFilter = ch;
+  document.querySelectorAll('.conv-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderConversations();
+}
+
+function openConversation(id) {
+  activeConvId = id;
+  const convs = getData('conversations');
+  const conv = convs.find(c => c.id === id);
+  if (!conv) return;
+  conv.unread = 0;
+  saveData('conversations', convs);
+  renderConversations();
+
+  const avatarGrads = ['135deg,#0066ff,#00d4aa','135deg,#10b981,#059669','135deg,#8b5cf6,#6d28d9','135deg,#f59e0b,#d97706','135deg,#ef4444,#dc2626'];
+  const idx = conv.id % 5;
+  const area = document.getElementById('chat-area');
+  area.innerHTML = `
+    <div class="chat-header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(${avatarGrads[idx]});display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:700;">${conv.avatar}</div>
+        <div>
+          <div style="font-size:15px;font-weight:700;">${conv.contact}</div>
+          <div style="font-size:12px;color:#6b7280;display:flex;align-items:center;gap:4px;">
+            <i class="fa-${conv.channel === 'email' ? 'regular fa-envelope' : 'solid fa-mobile-screen'}"></i> ${conv.channel} &bull;
+            <span class="badge ${conv.status === 'open' ? 'badge-green' : 'badge-gray'}" style="font-size:10px;">${conv.status}</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary btn-sm"><i class="fa-solid fa-phone"></i> Call</button>
+        <button class="btn btn-secondary btn-sm"><i class="fa-solid fa-user"></i> Profile</button>
+        <button class="btn btn-secondary btn-sm"><i class="fa-solid fa-ellipsis"></i></button>
+      </div>
+    </div>
+    <div class="chat-messages" id="messages-container">
+      ${conv.messages.map(m => `
+        <div class="message ${m.from === 'me' ? 'outgoing' : 'incoming'}">
+          ${m.from === 'them' ? `<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(${avatarGrads[idx]});display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:700;flex-shrink:0;">${conv.avatar}</div>` : ''}
+          <div>
+            <div class="msg-bubble">${m.text}</div>
+            <div class="msg-time">${m.time}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="chat-input-area">
+      <div style="display:flex;gap:6px;margin-right:6px;">
+        <button class="btn btn-secondary btn-sm btn-icon" title="Attach file"><i class="fa-solid fa-paperclip"></i></button>
+        <button class="btn btn-secondary btn-sm btn-icon" title="Template"><i class="fa-solid fa-file-lines"></i></button>
+      </div>
+      <textarea class="chat-input" id="chat-input-field" placeholder="Type a message..." rows="1" onkeydown="handleChatKey(event,${id})"></textarea>
+      <button class="send-btn" onclick="sendMessage(${id})"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+  `;
+  const mc = document.getElementById('messages-container');
+  if (mc) mc.scrollTop = mc.scrollHeight;
+}
+
+function handleChatKey(e, id) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(id); } }
+
+function sendMessage(id) {
+  const input = document.getElementById('chat-input-field');
+  const text = input.value.trim();
+  if (!text) return;
+  const convs = getData('conversations');
+  const conv = convs.find(c => c.id === id);
+  if (!conv) return;
+  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  conv.messages.push({ from: 'me', text, time });
+  conv.lastMessage = text;
+  conv.time = 'Just now';
+  saveData('conversations', convs);
+  input.value = '';
+  openConversation(id);
+  showToast('Message sent!');
+}
+
+// ==================== CALENDAR ====================
+let calDate = new Date(2024, 2, 1); // March 2024
+
+function renderCalendar() {
+  const appointments = getData('appointments');
+  const year = calDate.getFullYear();
+  const month = calDate.getMonth();
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month-label').textContent = `${months[month]} ${year}`;
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysInPrev = new Date(year, month, 0).getDate();
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  let html = days.map(d => `<div class="cal-header-cell">${d}</div>`).join('');
+  for (let i = 0; i < firstDay; i++) {
+    const d = daysInPrev - firstDay + i + 1;
+    html += `<div class="cal-day other-month"><div class="cal-day-num">${d}</div></div>`;
+  }
+  const today = new Date();
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = year === today.getFullYear() && month === today.getMonth() && d === today.getDate();
+    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayAppts = appointments.filter(a => a.date === dateStr);
+    const eventsHtml = dayAppts.slice(0,2).map(a => `<div class="cal-event type-${a.type.toLowerCase()}" title="${a.title}">${a.time} ${a.contact.split(' ')[0]}</div>`).join('');
+    const more = dayAppts.length > 2 ? `<div style="font-size:10px;color:#6b7280;margin-top:2px;">+${dayAppts.length-2} more</div>` : '';
+    html += `<div class="cal-day ${isToday ? 'today' : ''}" onclick="openAddAppointmentOnDate('${dateStr}')"><div class="cal-day-num">${d}</div>${eventsHtml}${more}</div>`;
+  }
+  const remaining = 42 - firstDay - daysInMonth;
+  for (let i = 1; i <= remaining; i++) {
+    html += `<div class="cal-day other-month"><div class="cal-day-num">${i}</div></div>`;
+  }
+  document.getElementById('calendar-grid').innerHTML = html;
+  renderUpcomingAppointments();
+}
+
+function renderUpcomingAppointments() {
+  const appointments = getData('appointments').sort((a, b) => a.date.localeCompare(b.date));
+  const typeColors = { Demo:'#0066ff', Discovery:'#8b5cf6', 'Follow-up':'#f59e0b', Onboarding:'#10b981', Contract:'#ef4444', 'Check-in':'#00d4aa', Strategy:'#6366f1', Renewal:'#14b8a6' };
+  document.getElementById('upcoming-appointments').innerHTML = appointments.map(a => `
+    <div style="padding:10px 0;border-bottom:1px solid #f3f4f6;display:flex;gap:10px;align-items:flex-start;">
+      <div style="width:6px;height:6px;border-radius:50%;background:${typeColors[a.type]||'#0066ff'};margin-top:5px;flex-shrink:0;"></div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:600;">${a.contact}</div>
+        <div style="font-size:11.5px;color:#6b7280;">${a.type} &bull; ${a.date}</div>
+        <div style="font-size:11.5px;color:#6b7280;">${a.time} &bull; ${a.duration}min</div>
+      </div>
+      <span class="badge ${a.status === 'confirmed' ? 'badge-green' : 'badge-yellow'}" style="font-size:10px;">${a.status}</span>
+    </div>
+  `).join('') || '<div style="color:#9ca3af;font-size:13px;padding:20px 0;text-align:center;">No upcoming appointments</div>';
+}
+
+function changeCalMonth(dir) {
+  if (dir === 0) { calDate = new Date(); }
+  else { calDate = new Date(calDate.getFullYear(), calDate.getMonth() + dir, 1); }
+  renderCalendar();
+}
+
+function setCalView(view, btn) {
+  document.querySelectorAll('#view-month,#view-week').forEach(b => { b.style.background = 'transparent'; b.style.color = '#6b7280'; b.style.boxShadow = 'none'; });
+  btn.style.background = 'white';
+  btn.style.color = '#111827';
+  btn.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+}
+
+function openAddAppointment() {
+  document.getElementById('apt-date').value = '';
+  document.getElementById('apt-title').value = '';
+  document.getElementById('apt-contact').value = '';
+  document.getElementById('apt-notes').value = '';
+  openModal('appointment-modal');
+}
+
+function openAddAppointmentOnDate(date) {
+  openAddAppointment();
+  document.getElementById('apt-date').value = date;
+}
+
+function saveAppointment() {
+  const title = document.getElementById('apt-title').value.trim();
+  if (!title) { alert('Title is required'); return; }
+  const apts = getData('appointments');
+  const timeVal = document.getElementById('apt-time').value;
+  const timeStr = timeVal ? new Date('2000-01-01T' + timeVal).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '09:00 AM';
+  apts.push({
+    id: Date.now(),
+    title,
+    contact: document.getElementById('apt-contact').value.trim(),
+    email: '',
+    date: document.getElementById('apt-date').value,
+    time: timeStr,
+    duration: parseInt(document.getElementById('apt-duration').value) || 45,
+    type: document.getElementById('apt-type').value,
+    status: 'confirmed',
+    notes: document.getElementById('apt-notes').value.trim()
+  });
+  saveData('appointments', apts);
+  closeModal('appointment-modal');
+  renderCalendar();
+  showToast('Appointment booked!');
+}
+
+// ==================== CAMPAIGNS ====================
+function renderCampaigns() {
+  let campaigns = getData('campaigns');
+  const typeFilter = document.getElementById('campaign-type-filter').value;
+  const statusFilter = document.getElementById('campaign-status-filter').value;
+  if (typeFilter) campaigns = campaigns.filter(c => c.type === typeFilter);
+  if (statusFilter) campaigns = campaigns.filter(c => c.status === statusFilter);
+  const statusColors = { active:'badge-green', draft:'badge-yellow', completed:'badge-gray' };
+
+  document.getElementById('campaigns-list').innerHTML = campaigns.map(c => `
+    <div class="campaign-card" style="margin-bottom:14px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+        <div style="display:flex;align-items:flex-start;gap:12px;">
+          <div style="width:42px;height:42px;border-radius:10px;background:${c.type==='Email'?'rgba(0,102,255,0.1)':'rgba(16,185,129,0.1)'};display:flex;align-items:center;justify-content:center;font-size:18px;color:${c.type==='Email'?'#0066ff':'#10b981'};flex-shrink:0;">
+            <i class="fa-${c.type==='Email'?'regular fa-envelope':'solid fa-mobile-screen'}"></i>
+          </div>
+          <div>
+            <div style="font-size:15px;font-weight:700;">${c.name}</div>
+            <div style="font-size:12.5px;color:#6b7280;margin-top:2px;">${c.subject}</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+              <span class="badge ${statusColors[c.status]}">${c.status}</span>
+              <span class="badge badge-gray">${c.type}</span>
+              <span style="font-size:11.5px;color:#9ca3af;">Audience: ${c.audience}</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          ${c.status === 'draft' ? `<button class="btn btn-primary btn-sm" onclick="launchCampaign(${c.id})"><i class="fa-solid fa-paper-plane"></i> Send</button>` : ''}
+          <button class="btn btn-secondary btn-sm"><i class="fa-solid fa-chart-bar"></i> Stats</button>
+          <button class="btn btn-secondary btn-sm"><i class="fa-solid fa-pen"></i></button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:0;background:#f8fafc;border-radius:10px;overflow:hidden;">
+        ${[
+          ['Sent', c.sent.toLocaleString(), ''],
+          ['Opened', c.opened.toLocaleString(), c.sent ? Math.round(c.opened/c.sent*100)+'%' : '—'],
+          ['Clicked', c.clicked.toLocaleString(), c.sent ? Math.round(c.clicked/c.sent*100)+'%' : '—'],
+          ['Converted', c.converted.toLocaleString(), c.sent ? Math.round(c.converted/c.sent*100)+'%' : '—'],
+          ['Revenue', '$'+c.revenue.toLocaleString(), ''],
+          ['Unsubs', c.unsubscribed.toLocaleString(), '']
+        ].map((s,i) => `
+          <div class="campaign-stat" ${i < 5 ? 'style="border-right:1px solid #e5e7eb;"' : ''}>
+            <div class="campaign-stat-value">${s[1]}</div>
+            ${s[2] ? `<div style="font-size:10px;font-weight:700;color:#10b981;">${s[2]}</div>` : ''}
+            <div class="campaign-stat-label">${s[0]}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('') || '<div class="card" style="text-align:center;padding:40px;color:#9ca3af;">No campaigns found</div>';
+}
+
+function filterCampaigns() { renderCampaigns(); }
+
+function openCreateCampaign() {
+  ['camp-name','camp-subject','camp-body'].forEach(id => document.getElementById(id).value = '');
+  openModal('campaign-modal');
+}
+
+function launchCampaign(id) {
+  const campaigns = getData('campaigns');
+  const c = campaigns.find(x => x.id === id);
+  if (c) { c.status = 'active'; c.sent = Math.floor(Math.random() * 2000) + 500; saveData('campaigns', campaigns); renderCampaigns(); showToast('Campaign launched!'); }
+}
+
+function saveCampaign() {
+  const name = document.getElementById('camp-name').value.trim();
+  if (!name) { alert('Campaign name is required'); return; }
+  const campaigns = getData('campaigns');
+  campaigns.push({
+    id: Date.now(), name,
+    type: document.getElementById('camp-type').value,
+    status: document.getElementById('camp-schedule').value === 'Save as draft' ? 'draft' : 'active',
+    subject: document.getElementById('camp-subject').value,
+    audience: document.getElementById('camp-audience').value,
+    sent: 0, opened: 0, clicked: 0, converted: 0, revenue: 0, unsubscribed: 0,
+    createdAt: new Date().toISOString().slice(0,10)
+  });
+  saveData('campaigns', campaigns);
+  closeModal('campaign-modal');
+  renderCampaigns();
+  showToast('Campaign created!');
+}
+
+// ==================== WORKFLOWS ====================
+function renderWorkflows() {
+  const wf = AppData.workflows;
+  document.getElementById('workflow-list').innerHTML = wf.map(w => `
+    <div class="card" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:16px 20px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:42px;height:42px;border-radius:10px;background:rgba(0,102,255,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;color:#0066ff;flex-shrink:0;">
+          <i class="fa-solid fa-diagram-project"></i>
+        </div>
+        <div>
+          <div style="font-size:14px;font-weight:700;">${w.name}</div>
+          <div style="font-size:12px;color:#6b7280;margin-top:2px;">${w.triggers} trigger${w.triggers>1?'s':''} &bull; ${w.actions} actions &bull; Last run: ${w.lastRun}</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="text-align:center;">
+          <div style="font-size:18px;font-weight:800;color:#0066ff;">${w.contacts.toLocaleString()}</div>
+          <div style="font-size:11px;color:#6b7280;">Enrolled</div>
+        </div>
+        <span class="badge ${w.status === 'active' ? 'badge-green' : 'badge-yellow'}">${w.status}</span>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-secondary btn-sm" onclick="editWorkflow(${w.id})"><i class="fa-solid fa-pen"></i> Edit</button>
+          <button class="btn btn-secondary btn-sm" onclick="toggleWorkflow(${w.id})">
+            <i class="fa-solid fa-${w.status==='active'?'pause':'play'}"></i> ${w.status==='active'?'Pause':'Activate'}
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleWorkflow(id) { showToast('Workflow updated!'); renderWorkflows(); }
+function editWorkflow(id) { showToast('Opening workflow editor...'); renderWorkflowCanvas(); }
+function openCreateWorkflow() { showToast('Opening workflow builder...'); }
+
+function renderWorkflowCanvas() {
+  const nodes = [
+    { type:'trigger', icon:'bolt', label:'Trigger: New Lead Added', color:'#10b981' },
+    { type:'action', icon:'envelope', label:'Action: Send Welcome Email', color:'#0066ff' },
+    { type:'condition', icon:'code-branch', label:'Condition: Opened Email?', color:'#f59e0b' },
+    { type:'action', icon:'clock', label:'Action: Wait 3 Days', color:'#0066ff' },
+    { type:'action', icon:'mobile-screen', label:'Action: Send SMS Follow-up', color:'#0066ff' },
+    { type:'action', icon:'user-check', label:'Action: Assign to Sales Rep', color:'#0066ff' }
+  ];
+  const canvas = document.getElementById('workflow-canvas');
+  canvas.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:flex-start;width:fit-content;">
+      ${nodes.map((n, i) => `
+        <div style="display:flex;flex-direction:column;align-items:flex-start;">
+          <div class="workflow-node ${n.type}-node" style="border-color:${n.color};background:${n.color}15;">
+            <div style="width:32px;height:32px;border-radius:8px;background:${n.color}20;display:flex;align-items:center;justify-content:center;color:${n.color};font-size:14px;">
+              <i class="fa-solid fa-${n.icon}"></i>
+            </div>
+            <div>
+              <div style="font-size:11px;text-transform:uppercase;font-weight:700;color:${n.color};letter-spacing:0.5px;">${n.type}</div>
+              <div style="font-size:13px;">${n.label}</div>
+            </div>
+            <button style="margin-left:auto;background:none;border:none;color:#9ca3af;cursor:pointer;font-size:12px;"><i class="fa-solid fa-pen"></i></button>
+          </div>
+          ${i < nodes.length - 1 ? `
+            <div style="display:flex;flex-direction:column;align-items:center;padding:4px 20px;">
+              <div style="width:2px;height:24px;background:#e5e7eb;"></div>
+              <div style="color:#9ca3af;font-size:12px;"><i class="fa-solid fa-chevron-down"></i></div>
+              <div style="width:2px;height:8px;background:#e5e7eb;"></div>
+            </div>
+          ` : ''}
+        </div>
+      `).join('')}
+      <button style="margin-top:12px;padding:10px 20px;border:2px dashed #e5e7eb;border-radius:10px;background:transparent;color:#9ca3af;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:6px;" onmouseover="this.style.borderColor='#0066ff';this.style.color='#0066ff';" onmouseout="this.style.borderColor='#e5e7eb';this.style.color='#9ca3af';">
+        <i class="fa-solid fa-plus"></i> Add Step
+      </button>
+    </div>
+  `;
+}
+
+// ==================== FUNNELS ====================
+function renderFunnels() {
+  const funnels = AppData.funnels;
+  document.getElementById('funnels-grid').innerHTML = funnels.map(f => `
+    <div class="funnel-card">
+      <div class="funnel-preview">
+        <div class="funnel-preview-icon"><i class="fa-solid fa-filter"></i></div>
+        <div class="funnel-preview-pages">${f.pages} pages</div>
+        <span class="badge ${f.status === 'active' ? 'badge-green' : 'badge-yellow'}" style="position:absolute;bottom:10px;left:10px;">${f.status}</span>
+      </div>
+      <div class="funnel-body">
+        <div class="funnel-name">${f.name}</div>
+        <div class="funnel-metrics">
+          <div class="funnel-metric">
+            <div class="funnel-metric-value">${(f.visitors/1000).toFixed(1)}K</div>
+            <div class="funnel-metric-label">Visitors</div>
+          </div>
+          <div class="funnel-metric">
+            <div class="funnel-metric-value" style="color:#10b981;">${f.rate}%</div>
+            <div class="funnel-metric-label">Conv. Rate</div>
+          </div>
+          <div class="funnel-metric">
+            <div class="funnel-metric-value" style="color:#0066ff;">$${(f.revenue/1000).toFixed(0)}K</div>
+            <div class="funnel-metric-label">Revenue</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:14px;">
+          <button class="btn btn-secondary btn-sm" style="flex:1;">Edit</button>
+          <button class="btn btn-primary btn-sm" style="flex:1;"><i class="fa-solid fa-eye"></i> Preview</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openCreateFunnel() { showToast('Opening funnel builder...'); }
+
+// ==================== REPORTING ====================
+function initReporting() {
+  const kpis = [
+    { label: 'Total Revenue', value: '$487,200', color: '#0066ff', icon: 'dollar-sign' },
+    { label: 'Total Leads', value: '2,847', color: '#10b981', icon: 'users' },
+    { label: 'Conversion Rate', value: '24.8%', color: '#8b5cf6', icon: 'percent' },
+    { label: 'Avg Deal Size', value: '$18,400', color: '#f59e0b', icon: 'chart-bar' },
+    { label: 'Won Deals', value: '4', color: '#06b6d4', icon: 'trophy' }
+  ];
+  document.getElementById('report-kpis').innerHTML = kpis.map(k => `
+    <div class="report-metric">
+      <div style="width:38px;height:38px;border-radius:9px;background:${k.color}15;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:16px;color:${k.color};">
+        <i class="fa-solid fa-${k.icon}"></i>
+      </div>
+      <div class="report-metric-value" style="color:${k.color};">${k.value}</div>
+      <div class="report-metric-label">${k.label}</div>
+    </div>
+  `).join('');
+
+  // Revenue chart
+  new Chart(document.getElementById('report-revenue-chart'), {
+    type: 'bar',
+    data: { labels: AppData.revenueData.labels, datasets: [{ label: 'Revenue', data: AppData.revenueData.data, backgroundColor: '#0066ff20', borderColor: '#0066ff', borderWidth: 2, borderRadius: 4 }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{grid:{display:false},ticks:{font:{size:10}}}, y:{grid:{color:'#f3f4f6'},ticks:{callback:v=>'$'+(v>=1000?(v/1000).toFixed(0)+'K':v),font:{size:10}}} } }
+  });
+
+  // Leads chart
+  new Chart(document.getElementById('report-leads-chart'), {
+    type: 'line',
+    data: { labels: AppData.leadsData.labels, datasets: [{ label: 'Leads', data: AppData.leadsData.data, borderColor:'#10b981', backgroundColor:'#10b98115', borderWidth:2.5, fill:true, tension:0.4, pointRadius:3 }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{grid:{display:false},ticks:{font:{size:10}}}, y:{grid:{color:'#f3f4f6'},ticks:{font:{size:10}}} } }
+  });
+
+  // Pipeline donut
+  new Chart(document.getElementById('report-pipeline-chart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['New Lead','Contacted','Proposal','Won','Lost'],
+      datasets: [{ data: [3,6,7,4,1], backgroundColor:['#6366f1','#f59e0b','#0066ff','#10b981','#ef4444'], borderWidth:0 }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10,padding:8}}} }
+  });
+
+  // Campaign bar
+  new Chart(document.getElementById('report-campaign-chart'), {
+    type: 'bar',
+    data: {
+      labels: AppData.campaigns.slice(0,5).map(c => c.name.split(' ').slice(0,2).join(' ')),
+      datasets: [
+        { label:'Open Rate', data:[45,58,85,60,80], backgroundColor:'#0066ff', borderRadius:4 },
+        { label:'Click Rate', data:[13,23,20,20,40], backgroundColor:'#00d4aa', borderRadius:4 }
+      ]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}}, scales:{ x:{grid:{display:false},ticks:{font:{size:9}}}, y:{grid:{color:'#f3f4f6'},ticks:{callback:v=>v+'%',font:{size:10}}} } }
+  });
+
+  // Funnel chart
+  new Chart(document.getElementById('report-funnel-chart'), {
+    type: 'bar',
+    data: {
+      labels: ['Leads','Contacted','Proposal','Won'],
+      datasets: [{ label:'Count', data:[2847,980,340,84], backgroundColor:['#0066ff','#6366f1','#8b5cf6','#10b981'], borderRadius:4 }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}}, scales:{ x:{grid:{color:'#f3f4f6'},ticks:{font:{size:10}}}, y:{grid:{display:false},ticks:{font:{size:10}}} } }
+  });
+}
+
+// ==================== MODALS ====================
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+});
+
+function openQuickAdd() { openModal('quick-add-modal'); }
+
+// ==================== DROPDOWNS ====================
+function toggleNotifications() {
+  document.getElementById('notif-dropdown').classList.toggle('open');
+}
+
+function toggleUserDropdown() {
+  closeAllDropdowns();
+}
+
+function closeAllDropdowns() {
+  document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.remove('open'));
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#notif-btn') && !e.target.closest('#notif-dropdown')) {
+    document.getElementById('notif-dropdown').classList.remove('open');
+  }
+});
+
+// ==================== GLOBAL SEARCH ====================
+function handleGlobalSearch(val) {
+  if (!val) return;
+}
+
+// ==================== TOAST ====================
+function showToast(msg, icon) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  document.getElementById('toast-icon').className = `fa-solid fa-${icon || 'check-circle'}`;
+  document.getElementById('toast-icon').style.color = icon === 'trash' ? '#ef4444' : '#10b981';
+  toast.style.display = 'block';
+  toast.style.animation = 'fadeIn 0.3s ease';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { toast.style.display = 'none'; }, 3000);
+}
+
+function updateDashboardPeriod(val) { showToast(`Updated to last ${val} days`); }
+
+function toggleUserMenu() { showToast('Account settings...'); }
+
+// ==================== BOOTSTRAP ====================
+document.addEventListener('DOMContentLoaded', () => {
+  initDashboard();
+  chartsInitialized.dashboard = true;
+  renderConversations();
+  chartsInitialized.conversations = true;
+});
+</script>
+</body>
+</html>
